@@ -5,950 +5,718 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Richard Devera</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@300;400;500&family=Geist:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --white: #FAFAF8;
-    --black: #0F0F0E;
-    --gray-100: #F2F2F0;
-    --gray-200: #E4E4E1;
-    --gray-400: #9A9A95;
-    --gray-600: #6B6B66;
-    --gray-800: #3A3A38;
-    --accent: #1D4E89;
-    --accent-light: #E8EFF8;
-    --rule: #D8D8D4;
-    --font-serif: 'DM Serif Display', Georgia, serif;
-    --font-sans: 'DM Sans', sans-serif;
-    --font-mono: 'DM Mono', monospace;
+    --white:     #F8F8F6;
+    --black:     #111110;
+    --gray-100:  #F0F0EE;
+    --gray-200:  #E2E2DF;
+    --gray-400:  #9A9A96;
+    --gray-600:  #65655F;
+    --gray-800:  #38382F;
+    --accent:    #1B4B8A;
+    --accent-dim:#E6EDF7;
+    --rule:      #D9D9D5;
+    --serif:     'Instrument Serif', Georgia, serif;
+    --sans:      'Geist', sans-serif;
+    --mono:      'Geist Mono', monospace;
   }
 
   html { scroll-behavior: smooth; }
-
   body {
-    font-family: var(--font-sans);
+    font-family: var(--sans);
     background: var(--white);
     color: var(--black);
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* ── NAV ── */
+  /* ── NAV ────────────────────────── */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(250,250,248,0.92);
-    backdrop-filter: blur(12px);
+    background: rgba(248,248,246,0.94);
+    backdrop-filter: blur(14px);
     border-bottom: 1px solid var(--rule);
   }
   .nav-inner {
-    max-width: 1080px; margin: 0 auto;
-    padding: 0 32px;
+    max-width: 1100px; margin: 0 auto; padding: 0 36px;
     display: flex; align-items: center; justify-content: space-between;
-    height: 56px;
+    height: 54px;
   }
   .nav-logo {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    font-weight: 400;
-    color: var(--black);
-    text-decoration: none;
-    letter-spacing: 0.02em;
-    cursor: pointer;
+    font-family: var(--mono); font-size: 12px; font-weight: 400;
+    color: var(--black); text-decoration: none;
+    letter-spacing: 0.06em; cursor: pointer;
   }
-  .nav-links {
-    display: flex; gap: 32px; list-style: none;
-  }
+  .nav-links { display: flex; gap: 28px; list-style: none; }
   .nav-links a {
-    font-size: 13px;
-    font-weight: 400;
-    color: var(--gray-600);
-    text-decoration: none;
-    letter-spacing: 0.02em;
-    transition: color 0.2s;
-    cursor: pointer;
+    font-family: var(--mono); font-size: 11px; font-weight: 400;
+    color: var(--gray-600); text-decoration: none;
+    letter-spacing: 0.06em; transition: color 0.18s; cursor: pointer;
   }
-  .nav-links a:hover, .nav-links a.active { color: var(--black); }
-  .nav-links a.active {
-    color: var(--black);
-    border-bottom: 1px solid var(--black);
-    padding-bottom: 1px;
+  .nav-links a:hover { color: var(--black); }
+  .nav-links a.active { color: var(--black); }
+
+  /* ── PAGES ──────────────────────── */
+  .page { display: none; padding-top: 54px; min-height: 100vh; }
+  .page.active { display: block; animation: fadeUp 0.35s ease both; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ── PAGES ── */
-  .page { display: none; padding-top: 56px; }
-  .page.active { display: block; }
+  /* ── LAYOUT ─────────────────────── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 36px; }
+  .section { padding: 72px 0; border-top: 1px solid var(--rule); }
 
-  /* ── LAYOUT ── */
-  .container { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
-  .section { padding: 80px 0; }
-  .section + .section { border-top: 1px solid var(--rule); }
-
-  /* ── TYPOGRAPHY ── */
+  /* ── TYPE ───────────────────────── */
   h1 {
-    font-family: var(--font-serif);
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 400;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
+    font-family: var(--serif);
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 400; line-height: 1.1; letter-spacing: -0.02em;
   }
   h2 {
-    font-family: var(--font-serif);
-    font-size: clamp(1.6rem, 3vw, 2.2rem);
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-  }
-  h3 {
-    font-size: 14px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--gray-600);
+    font-family: var(--serif);
+    font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+    font-weight: 400; line-height: 1.25;
   }
   p { color: var(--gray-800); line-height: 1.75; }
-  .label {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 300;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-    display: block;
-    margin-bottom: 16px;
+
+  .eyebrow {
+    font-family: var(--mono); font-size: 10px; font-weight: 400;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); display: block; margin-bottom: 20px;
+  }
+  .section-label {
+    font-family: var(--mono); font-size: 10px; font-weight: 400;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--gray-400); display: block; margin-bottom: 32px;
   }
 
-  /* ── BUTTONS ── */
+  /* ── BUTTONS ────────────────────── */
   .btn {
-    display: inline-block;
-    padding: 11px 24px;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-    font-family: var(--font-sans);
+    display: inline-block; padding: 10px 22px;
+    font-family: var(--mono); font-size: 11px; font-weight: 400;
+    letter-spacing: 0.06em; text-decoration: none;
+    cursor: pointer; transition: all 0.18s; border: none;
   }
-  .btn-primary {
-    background: var(--black);
-    color: var(--white);
-  }
+  .btn-primary { background: var(--black); color: var(--white); }
   .btn-primary:hover { background: var(--gray-800); }
   .btn-outline {
-    background: transparent;
-    color: var(--black);
+    background: transparent; color: var(--black);
     border: 1px solid var(--rule);
   }
-  .btn-outline:hover { border-color: var(--black); }
+  .btn-outline:hover { border-color: var(--gray-600); }
 
-  /* ── RULE ── */
-  hr { border: none; border-top: 1px solid var(--rule); }
+  .text-link {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--black); text-decoration: none;
+    border-bottom: 1px solid var(--rule); padding-bottom: 1px;
+    transition: border-color 0.18s; cursor: pointer;
+  }
+  .text-link:hover { border-color: var(--black); }
 
-  /* ─────────────────────────────────
-     HOME PAGE
-  ───────────────────────────────── */
+  /* ═══════════════════════════════════
+     HOME
+  ═══════════════════════════════════ */
   .hero {
-    padding: 100px 0 80px;
+    padding: 96px 0 80px;
     border-bottom: 1px solid var(--rule);
   }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 80px; align-items: end;
+  }
   .hero-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 300;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 28px;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 24px; display: block;
   }
   .hero h1 { margin-bottom: 20px; }
-  .hero-title {
-    font-size: 14px;
-    font-weight: 400;
-    color: var(--gray-600);
-    font-family: var(--font-mono);
-    letter-spacing: 0.03em;
-    margin-bottom: 24px;
+  .hero-role {
+    font-family: var(--mono); font-size: 12px;
+    color: var(--gray-600); letter-spacing: 0.04em; margin-bottom: 28px;
   }
   .hero-tagline {
-    font-size: 18px;
-    font-weight: 300;
-    color: var(--gray-800);
-    max-width: 540px;
-    margin-bottom: 40px;
-    line-height: 1.65;
+    font-size: 17px; font-weight: 300;
+    color: var(--gray-800); max-width: 500px;
+    line-height: 1.7; margin-bottom: 40px;
   }
-  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .hero-meta {}
+  .hero-stat {
+    margin-bottom: 24px; padding-bottom: 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .hero-stat:last-child { border: none; margin: 0; padding: 0; }
+  .hero-stat-num {
+    font-family: var(--serif); font-size: 2.2rem;
+    color: var(--black); display: block; line-height: 1; margin-bottom: 6px;
+  }
+  .hero-stat-label {
+    font-family: var(--mono); font-size: 10px;
+    color: var(--gray-400); letter-spacing: 0.1em; text-transform: uppercase;
+  }
 
   /* What I Do */
   .what-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 48px;
-  }
-  .what-item {}
-  .what-num {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--accent);
-    letter-spacing: 0.1em;
-    margin-bottom: 16px;
-    display: block;
-  }
-  .what-item h2 {
-    font-family: var(--font-serif);
-    font-size: 1.3rem;
-    margin-bottom: 12px;
-    line-height: 1.3;
-  }
-  .what-item p { font-size: 15px; color: var(--gray-600); }
-
-  /* Cards */
-  .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .card {
-    background: var(--white);
+    display: grid; grid-template-columns: repeat(3, 1fr);
     border: 1px solid var(--rule);
-    padding: 28px;
-    transition: border-color 0.2s;
   }
-  .card:hover { border-color: var(--gray-400); }
-  .card-tag {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 14px;
-    display: block;
+  .what-item {
+    padding: 36px 32px;
+    border-right: 1px solid var(--rule);
   }
-  .card h4 {
-    font-family: var(--font-serif);
-    font-size: 1.15rem;
-    font-weight: 400;
-    line-height: 1.3;
-    margin-bottom: 10px;
+  .what-item:last-child { border-right: none; }
+  .what-num {
+    font-family: var(--mono); font-size: 10px;
+    color: var(--accent); letter-spacing: 0.1em;
+    margin-bottom: 20px; display: block;
   }
-  .card p { font-size: 14px; color: var(--gray-600); line-height: 1.65; }
-  .card-link {
-    display: inline-block;
-    margin-top: 20px;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--black);
-    text-decoration: none;
-    letter-spacing: 0.04em;
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: 2px;
-    transition: border-color 0.2s;
-    cursor: pointer;
-  }
-  .card-link:hover { border-color: var(--black); }
+  .what-item h2 { font-size: 1.2rem; margin-bottom: 14px; line-height: 1.3; }
+  .what-item p { font-size: 14px; color: var(--gray-600); line-height: 1.7; }
 
-  /* Journal cards */
-  .journal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-  .journal-card {
-    padding: 28px 0;
-    border-top: 1px solid var(--rule);
+  /* Featured Labs */
+  .lab-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--rule); }
+  .lab-card { background: var(--white); padding: 28px; transition: background 0.15s; }
+  .lab-card:hover { background: var(--gray-100); }
+  .lab-card-tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 14px; display: block;
   }
-  .journal-card-date {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--gray-400);
-    letter-spacing: 0.08em;
-    margin-bottom: 12px;
-    display: block;
+  .lab-card h4 {
+    font-family: var(--serif); font-size: 1.1rem;
+    font-weight: 400; line-height: 1.35; margin-bottom: 10px;
   }
-  .journal-card h4 {
-    font-family: var(--font-serif);
-    font-size: 1.15rem;
-    font-weight: 400;
-    line-height: 1.35;
-    margin-bottom: 10px;
+  .lab-card p { font-size: 13px; color: var(--gray-600); line-height: 1.65; }
+  .lab-card-link {
+    display: inline-block; margin-top: 18px;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--black); text-decoration: none;
+    border-bottom: 1px solid var(--rule); padding-bottom: 1px;
+    transition: border-color 0.18s;
   }
-  .journal-card p { font-size: 14px; color: var(--gray-600); line-height: 1.65; }
+  .lab-card-link:hover { border-color: var(--black); }
+
+  /* Journal Coming Soon */
+  .journal-soon {
+    border: 1px solid var(--rule); padding: 60px 40px; text-align: center;
+  }
+  .journal-soon-mark {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--gray-400);
+    display: block; margin-bottom: 20px;
+  }
+  .journal-soon h2 { font-size: 1.4rem; margin-bottom: 14px; }
+  .journal-soon p { font-size: 14px; color: var(--gray-600); max-width: 380px; margin: 0 auto 28px; }
 
   /* Vision */
-  .vision-inner {
-    max-width: 640px;
-  }
-  .vision-inner p {
-    font-size: 17px;
-    line-height: 1.8;
-    color: var(--gray-800);
-  }
+  .vision-inner { max-width: 620px; }
+  .vision-inner p { font-size: 16px; line-height: 1.85; color: var(--gray-800); }
 
-  /* ─────────────────────────────────
+  /* ═══════════════════════════════════
      LABS PAGE
-  ───────────────────────────────── */
+  ═══════════════════════════════════ */
   .page-header {
-    padding: 80px 0 60px;
-    border-bottom: 1px solid var(--rule);
+    padding: 72px 0 56px; border-bottom: 1px solid var(--rule);
   }
   .page-header h1 { margin-bottom: 16px; }
-  .page-header p {
-    font-size: 17px;
-    max-width: 520px;
-    color: var(--gray-600);
-  }
+  .page-header p { font-size: 16px; max-width: 500px; color: var(--gray-600); line-height: 1.7; }
 
-  .labs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--rule); }
-  .lab-item {
-    background: var(--white);
-    padding: 36px;
-    transition: background 0.15s;
+  .labs-table { width: 100%; border-collapse: collapse; margin-top: 48px; }
+  .labs-table thead tr { border-bottom: 1px solid var(--rule); }
+  .labs-table th {
+    font-family: var(--mono); font-size: 10px; font-weight: 400;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gray-400); text-align: left; padding: 0 0 14px 0;
   }
-  .lab-item:hover { background: var(--gray-100); }
-  .lab-meta {
-    display: flex; gap: 16px; align-items: center;
-    margin-bottom: 20px;
+  .labs-table th.right { text-align: right; }
+  .labs-table tbody tr { border-bottom: 1px solid var(--rule); transition: background 0.15s; }
+  .labs-table tbody tr:hover { background: var(--gray-100); }
+  .labs-table td { padding: 24px 0; vertical-align: top; }
+  .lab-title-cell { padding-right: 32px; }
+  .lab-title { font-family: var(--serif); font-size: 1.05rem; font-weight: 400; line-height: 1.3; margin-bottom: 6px; }
+  .lab-desc { font-size: 13px; color: var(--gray-600); line-height: 1.6; max-width: 460px; }
+  .lab-tech { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .lab-tech span {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--gray-600);
+    background: var(--gray-100); padding: 2px 7px;
   }
-  .lab-status {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border: 1px solid var(--rule);
-    color: var(--gray-600);
+  .lab-forks { font-family: var(--mono); font-size: 13px; color: var(--gray-600); }
+  .status-pill {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 3px 9px;
+    display: inline-block; white-space: nowrap;
   }
-  .lab-status.active { border-color: var(--accent); color: var(--accent); }
-  .lab-date {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--gray-400);
-    letter-spacing: 0.06em;
-  }
-  .lab-item h4 {
-    font-family: var(--font-serif);
-    font-size: 1.3rem;
-    font-weight: 400;
-    margin-bottom: 12px;
-    line-height: 1.3;
-  }
-  .lab-item p { font-size: 14px; color: var(--gray-600); line-height: 1.7; }
-  .lab-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
-  .lab-tag {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: var(--gray-100);
-    color: var(--gray-600);
-    padding: 3px 8px;
-  }
+  .status-live { color: var(--accent); border: 1px solid var(--accent); }
+  .status-roadmap { color: var(--gray-400); border: 1px solid var(--rule); }
 
-  /* ─────────────────────────────────
+  .roadmap-note {
+    margin-top: 56px; padding: 28px 32px;
+    background: var(--accent-dim); border-left: 2px solid var(--accent);
+  }
+  .roadmap-note strong {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--accent);
+    display: block; margin-bottom: 8px; font-weight: 400;
+  }
+  .roadmap-note p { font-size: 14px; color: var(--gray-800); line-height: 1.7; }
+
+  /* ═══════════════════════════════════
      JOURNAL PAGE
-  ───────────────────────────────── */
-  .journal-list { }
-  .journal-entry {
-    display: grid;
-    grid-template-columns: 140px 1fr;
-    gap: 40px;
-    padding: 40px 0;
-    border-bottom: 1px solid var(--rule);
-    align-items: start;
+  ═══════════════════════════════════ */
+  .journal-full {
+    display: flex; align-items: center; justify-content: center;
+    min-height: calc(100vh - 54px);
   }
-  .journal-entry:first-child { border-top: 1px solid var(--rule); margin-top: 60px; }
-  .journal-entry-date {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--gray-400);
-    letter-spacing: 0.08em;
-    line-height: 1.6;
-    padding-top: 4px;
-  }
-  .journal-entry-body {}
-  .journal-entry-cat {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 10px;
-    display: block;
-  }
-  .journal-entry h4 {
-    font-family: var(--font-serif);
-    font-size: 1.4rem;
-    font-weight: 400;
-    margin-bottom: 12px;
-    line-height: 1.3;
-    cursor: pointer;
-  }
-  .journal-entry h4:hover { color: var(--accent); }
-  .journal-entry p { font-size: 15px; color: var(--gray-600); line-height: 1.7; }
-  .journal-entry-readmore {
-    display: inline-block;
-    margin-top: 16px;
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
-    color: var(--black);
-    text-decoration: none;
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: 2px;
-    transition: border-color 0.2s;
-    cursor: pointer;
-  }
-  .journal-entry-readmore:hover { border-color: var(--black); }
+  .journal-full-inner { text-align: center; max-width: 440px; }
+  .journal-full-inner h1 { font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 20px; }
+  .journal-full-inner p { font-size: 15px; color: var(--gray-600); line-height: 1.75; margin-bottom: 32px; }
+  .journal-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-  /* ─────────────────────────────────
+  /* ═══════════════════════════════════
      ABOUT PAGE
-  ───────────────────────────────── */
+  ═══════════════════════════════════ */
   .about-layout {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 80px;
-    padding: 80px 0;
+    display: grid; grid-template-columns: 1fr 300px;
+    gap: 80px; padding: 72px 0;
   }
-  .about-main {}
-  .about-main h2 {
-    font-family: var(--font-serif);
-    font-size: 1.9rem;
-    margin-bottom: 28px;
-    line-height: 1.3;
-  }
-  .about-main p {
-    font-size: 16px;
-    color: var(--gray-800);
-    line-height: 1.8;
-    margin-bottom: 20px;
-  }
-  .about-divider { border-top: 1px solid var(--rule); margin: 48px 0; }
-  .about-sidebar {}
-  .sidebar-block { margin-bottom: 48px; }
-  .sidebar-block h3 {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gray-400);
-    margin-bottom: 20px;
-  }
-  .focus-list { list-style: none; }
-  .focus-list li {
-    padding: 14px 0;
-    border-bottom: 1px solid var(--rule);
-    font-size: 14px;
-    color: var(--gray-800);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .focus-dot {
-    width: 4px; height: 4px;
-    background: var(--accent);
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .how-i-work {}
+  .about-bio h2 { font-size: 1.7rem; margin-bottom: 28px; line-height: 1.3; }
+  .about-bio p { font-size: 15px; color: var(--gray-800); line-height: 1.85; margin-bottom: 20px; }
+  .about-divider { border-top: 1px solid var(--rule); margin: 44px 0; }
+
   .how-item {
-    padding: 16px 0;
-    border-bottom: 1px solid var(--rule);
+    display: grid; grid-template-columns: 150px 1fr;
+    gap: 24px; padding: 20px 0;
+    border-bottom: 1px solid var(--rule); align-items: start;
   }
-  .how-item-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 6px;
-    display: block;
+  .how-item:first-child { border-top: 1px solid var(--rule); }
+  .how-label {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent); padding-top: 3px;
   }
-  .how-item p { font-size: 14px; color: var(--gray-600); line-height: 1.6; }
-  .personal-link-block {
-    padding: 24px;
-    background: var(--gray-100);
-    margin-top: 48px;
-  }
-  .personal-link-block p { font-size: 14px; color: var(--gray-600); margin-bottom: 16px; }
+  .how-body { font-size: 14px; color: var(--gray-600); line-height: 1.7; }
 
-  /* ─────────────────────────────────
+  .personal-callout { margin-top: 44px; padding: 24px 28px; border: 1px solid var(--rule); }
+  .personal-callout p { font-size: 14px; color: var(--gray-600); line-height: 1.7; margin-bottom: 16px; }
+
+  /* Sidebar */
+  .sidebar-block { margin-bottom: 40px; }
+  .sidebar-block h3 {
+    font-family: var(--mono); font-size: 10px; font-weight: 400;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gray-400); margin-bottom: 18px;
+  }
+  .dot-list { list-style: none; }
+  .dot-list li {
+    padding: 11px 0; border-bottom: 1px solid var(--rule);
+    font-size: 14px; color: var(--gray-800);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .dot {
+    width: 3px; height: 3px; background: var(--accent);
+    border-radius: 50%; flex-shrink: 0;
+  }
+  .career-item { padding: 13px 0; border-bottom: 1px solid var(--rule); }
+  .career-co { font-size: 13px; font-weight: 500; color: var(--black); margin-bottom: 2px; }
+  .career-role { font-family: var(--mono); font-size: 10px; color: var(--gray-400); letter-spacing: 0.05em; }
+
+  /* ═══════════════════════════════════
      PERSONAL PAGE
-  ───────────────────────────────── */
+  ═══════════════════════════════════ */
   .maker-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--rule);
-    margin-top: 60px;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--rule); margin-top: 60px;
   }
-  .maker-item {
-    background: var(--white);
-    padding: 36px;
+  .maker-item { background: var(--white); padding: 32px; }
+  .maker-cat {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gray-400);
+    margin-bottom: 14px; display: block;
   }
-  .maker-icon {
-    font-size: 28px;
-    margin-bottom: 20px;
-    display: block;
-    filter: grayscale(1);
-  }
-  .maker-item h4 {
-    font-family: var(--font-serif);
-    font-size: 1.2rem;
-    font-weight: 400;
-    margin-bottom: 10px;
-  }
-  .maker-item p { font-size: 14px; color: var(--gray-600); line-height: 1.65; }
-  .maker-category {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gray-400);
-    margin-bottom: 12px;
-    display: block;
-  }
+  .maker-item h4 { font-family: var(--serif); font-size: 1.1rem; font-weight: 400; margin-bottom: 10px; line-height: 1.3; }
+  .maker-item p { font-size: 13px; color: var(--gray-600); line-height: 1.65; }
 
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--rule);
-    padding: 40px 0;
-    margin-top: 40px;
-  }
+  /* ── FOOTER ─────────────────────── */
+  footer { border-top: 1px solid var(--rule); padding: 36px 0; margin-top: 80px; }
   .footer-inner {
-    max-width: 1080px; margin: 0 auto; padding: 0 32px;
+    max-width: 1100px; margin: 0 auto; padding: 0 36px;
     display: flex; justify-content: space-between; align-items: center;
   }
-  .footer-left {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--gray-400);
-    letter-spacing: 0.06em;
+  .footer-copy { font-family: var(--mono); font-size: 11px; color: var(--gray-400); letter-spacing: 0.04em; }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a {
+    font-family: var(--mono); font-size: 11px;
+    color: var(--gray-400); text-decoration: none;
+    letter-spacing: 0.04em; transition: color 0.18s;
   }
-  .footer-right {
-    display: flex; gap: 24px;
-  }
-  .footer-right a {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--gray-400);
-    text-decoration: none;
-    letter-spacing: 0.06em;
-    transition: color 0.2s;
-  }
-  .footer-right a:hover { color: var(--black); }
+  .footer-links a:hover { color: var(--black); }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
+  /* ── RESPONSIVE ─────────────────── */
+  @media (max-width: 820px) {
     .container { padding: 0 20px; }
     .nav-inner { padding: 0 20px; }
-    .what-grid { grid-template-columns: 1fr; gap: 40px; }
-    .card-grid { grid-template-columns: 1fr; }
-    .journal-grid { grid-template-columns: 1fr; }
-    .labs-grid { grid-template-columns: 1fr; }
-    .journal-entry { grid-template-columns: 1fr; gap: 8px; }
+    .nav-links { gap: 16px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-meta { display: flex; gap: 28px; }
+    .hero-stat { border-bottom: none; border-right: 1px solid var(--rule); padding: 0 28px 0 0; margin: 0; }
+    .hero-stat:last-child { border: none; padding: 0; }
+    .what-grid { grid-template-columns: 1fr; }
+    .what-item { border-right: none; border-bottom: 1px solid var(--rule); }
+    .what-item:last-child { border-bottom: none; }
+    .lab-cards { grid-template-columns: 1fr; }
+    .labs-table { display: block; overflow-x: auto; }
     .about-layout { grid-template-columns: 1fr; gap: 48px; }
+    .how-item { grid-template-columns: 1fr; gap: 6px; }
     .maker-grid { grid-template-columns: 1fr; }
     .footer-inner { flex-direction: column; gap: 16px; align-items: flex-start; }
-    .nav-links { gap: 20px; }
-    .hero { padding: 60px 0 60px; }
-    .section { padding: 60px 0; }
-  }
-
-  /* Fade in */
-  .page.active .container { animation: fadeUp 0.4s ease both; }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
   }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="nav-inner">
-    <a class="nav-logo" onclick="showPage('home')">rd/</a>
+    <span class="nav-logo" onclick="showPage('home')">rd /</span>
     <ul class="nav-links">
-      <li><a onclick="showPage('home')" data-page="home">Home</a></li>
-      <li><a onclick="showPage('labs')" data-page="labs">Labs</a></li>
-      <li><a onclick="showPage('journal')" data-page="journal">Journal</a></li>
-      <li><a onclick="showPage('about')" data-page="about">About</a></li>
+      <li><a onclick="showPage('home')"     data-page="home">Home</a></li>
+      <li><a onclick="showPage('labs')"     data-page="labs">Labs</a></li>
+      <li><a onclick="showPage('journal')"  data-page="journal">Journal</a></li>
+      <li><a onclick="showPage('about')"    data-page="about">About</a></li>
       <li><a onclick="showPage('personal')" data-page="personal">Personal</a></li>
     </ul>
   </div>
 </nav>
 
-<!-- ═══════════════════════════════
-     HOME
-═══════════════════════════════ -->
+<!-- ═══════════════════════════════════  HOME  -->
 <div class="page active" id="page-home">
-  <!-- Hero -->
   <div class="hero">
     <div class="container">
-      <p class="hero-eyebrow">Richard "Rick" Devera</p>
-      <h1>Building with intention.<br>Sharing what works.</h1>
-      <p class="hero-title">Cloud Security Architect &nbsp;|&nbsp; AI & Enablement Builder</p>
-      <p class="hero-tagline">Building, testing, and sharing practical cloud and AI architectures. No theory without implementation.</p>
-      <div class="hero-actions">
-        <button class="btn btn-primary" onclick="showPage('labs')">View Labs</button>
-        <button class="btn btn-outline" onclick="showPage('journal')">Journal</button>
+      <div class="hero-grid">
+        <div>
+          <span class="hero-eyebrow">Richard "Rick" Devera &mdash; Friendswood, TX</span>
+          <h1>Building with learn<br>Learning to share<br>Built, not theorized.</h1>
+          <p class="hero-role">Cloud Security Architect &nbsp;&middot;&nbsp; AI & Enablement Builder</p>
+          <p class="hero-tagline">Building, testing, and sharing practical cloud and AI architectures. Every recommendation starts in a lab environment.</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" onclick="showPage('labs')">View Labs</button>
+            <button class="btn btn-outline" onclick="showPage('about')">About</button>
+          </div>
+        </div>
+        <div class="hero-meta">
+          <div class="hero-stat">
+            <span class="hero-stat-num">20+</span>
+            <span class="hero-stat-label">Years in security &amp; infrastructure</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">6</span>
+            <span class="hero-stat-label">Public labs on GitHub</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">3</span>
+            <span class="hero-stat-label">Cloud platforms: AWS · GCP · Azure</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- What I Do -->
   <div class="section">
     <div class="container">
-      <span class="label">What I Do</span>
+      <span class="section-label">What I Do</span>
       <div class="what-grid">
         <div class="what-item">
           <span class="what-num">01</span>
           <h2>Lab-Backed Implementations</h2>
-          <p>Every architecture decision I write about has been built, tested, and iterated in a working environment. I don't publish what I haven't run.</p>
+          <p>Every architecture pattern I publish has been built and tested in a real environment. Lab environments exist to challenge assumptions — not confirm them.</p>
         </div>
         <div class="what-item">
           <span class="what-num">02</span>
-          <h2>AI Governance Exploration</h2>
-          <p>Working at the intersection of AI capability and responsible deployment—examining frameworks, controls, and the practical realities of enabling AI safely in organizations.</p>
+          <h2>AI Governance in Practice</h2>
+          <p>Working at the intersection of AI capability and responsible deployment. Building governance models grounded in implementation, not just policy documentation.</p>
         </div>
         <div class="what-item">
           <span class="what-num">03</span>
-          <h2>Practical Field Notes</h2>
-          <p>What didn't work, what had to change, what the documentation missed. Notes from the work itself, written for practitioners in the same terrain.</p>
+          <h2>Practitioner-First Enablement</h2>
+          <p>Workshops, walkthroughs, and architecture notes written for engineers in the same terrain — gaps, edge cases, and all.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Featured Labs -->
   <div class="section">
     <div class="container">
-      <span class="label">Featured Labs</span>
-      <div class="card-grid">
-        <div class="card">
-          <span class="card-tag">Cloud Security</span>
-          <h4>Zero Trust Network Architecture on AWS</h4>
-          <p>A working implementation of micro-segmentation, identity-aware proxies, and continuous verification across a multi-account AWS environment.</p>
-          <a class="card-link" onclick="showPage('labs')">View Lab →</a>
+      <span class="section-label">Featured Labs</span>
+      <div class="lab-cards">
+        <div class="lab-card">
+          <span class="lab-card-tag">IaC Security</span>
+          <h4>Terrascan Assessment Tool</h4>
+          <p>Infrastructure as Code scanning with Terrascan and OPA policy enforcement. Validates cloud configurations before provisioning reaches production.</p>
+          <a class="lab-card-link" href="https://github.com/rickdevera/terrascan_assessment_tool" target="_blank">View on GitHub →</a>
         </div>
-        <div class="card">
-          <span class="card-tag">AI Governance</span>
-          <h4>LLM Access Control Patterns</h4>
-          <p>Testing prompt-level and API-level controls for enterprise AI deployments. What the spec says versus what actually enforces.</p>
-          <a class="card-link" onclick="showPage('labs')">View Lab →</a>
+        <div class="lab-card">
+          <span class="lab-card-tag">AWS + Cloud Security</span>
+          <h4>Tenable AWS JAM Demo</h4>
+          <p>Terraform templates integrating Tenable Cloud Security into AWS JAM workshop environments. Forked 25+ times across the practitioner community.</p>
+          <a class="lab-card-link" href="https://github.com/rickdevera/tenable-awsjam-demo" target="_blank">View on GitHub →</a>
         </div>
-        <div class="card">
-          <span class="card-tag">Infrastructure</span>
-          <h4>Policy-as-Code with OPA + Terraform</h4>
-          <p>Embedding Open Policy Agent into a Terraform pipeline to enforce security posture before infrastructure reaches production.</p>
-          <a class="card-link" onclick="showPage('labs')">View Lab →</a>
+        <div class="lab-card">
+          <span class="lab-card-tag">Security Automation</span>
+          <h4>Check Point Automation</h4>
+          <p>Automating Check Point VM builds without the console GUI or First Time Wizard — enabling repeatable POC environments without long-term eval constraints.</p>
+          <a class="lab-card-link" href="https://github.com/rickdevera/checkpoint_automation" target="_blank">View on GitHub →</a>
         </div>
+      </div>
+      <div style="margin-top:16px; text-align:right;">
+        <a class="text-link" onclick="showPage('labs')">View all labs →</a>
       </div>
     </div>
   </div>
 
-  <!-- Journal Preview -->
   <div class="section">
     <div class="container">
-      <span class="label">Recent Journal</span>
-      <div class="journal-grid">
-        <div class="journal-card">
-          <span class="journal-card-date">2025 — 06</span>
-          <h4>What I Got Wrong About Secrets Management</h4>
-          <p>After three years of recommending the same pattern, a red team exercise exposed the gaps. Notes on what changed and why.</p>
-          <a class="card-link" onclick="showPage('journal')">Read →</a>
-        </div>
-        <div class="journal-card">
-          <span class="journal-card-date">2025 — 04</span>
-          <h4>AI Copilots in SOC Workflows: A Practical Review</h4>
-          <p>Six weeks of running an AI assistant alongside a real detection and response workflow. What accelerated. What didn't translate.</p>
-          <a class="card-link" onclick="showPage('journal')">Read →</a>
-        </div>
-        <div class="journal-card">
-          <span class="journal-card-date">2025 — 02</span>
-          <h4>Building a Home Lab That Mirrors Production</h4>
-          <p>The gap between test and production environments is where learning stops. How I designed a home lab that closes most of that gap.</p>
-          <a class="card-link" onclick="showPage('journal')">Read →</a>
-        </div>
+      <span class="section-label">Journal</span>
+      <div class="journal-soon">
+        <span class="journal-soon-mark">// coming soon</span>
+        <h2>Notes from the work.</h2>
+        <p>Field notes, architecture decisions, and honest post-mortems. Currently drafting. Follow on LinkedIn for updates in the meantime.</p>
+        <a class="btn btn-outline" href="https://linkedin.com/in/rdevera" target="_blank">Follow on LinkedIn</a>
       </div>
     </div>
   </div>
 
-  <!-- Vision -->
   <div class="section">
     <div class="container">
       <div class="vision-inner">
-        <span class="label">On Continuous Learning</span>
-        <p>Cloud security and AI are not stable domains. Frameworks shift, threat models evolve, and yesterday's best practice becomes tomorrow's finding. My approach is to stay close to the work—run labs, revisit assumptions, and document what holds up under testing. The goal is not to have every answer, but to develop reliable methods for finding them.</p>
+        <span class="section-label">On the Work</span>
+        <p>Cloud security and AI are not stable domains. What holds up today may not hold up under next quarter's threat model. My approach is to stay close to implementation — run the labs, test the assumptions, and document what actually works. The goal is not certainty. It's a reliable process for finding it.</p>
       </div>
     </div>
   </div>
 
   <footer>
     <div class="footer-inner">
-      <p class="footer-left">© 2025 Richard Devera</p>
-      <div class="footer-right">
-        <a href="https://github.com" target="_blank">GitHub</a>
-        <a href="https://linkedin.com" target="_blank">LinkedIn</a>
-        <a href="#">RSS</a>
+      <span class="footer-copy">© 2025 Richard Devera</span>
+      <div class="footer-links">
+        <a href="https://github.com/rickdevera" target="_blank">GitHub</a>
+        <a href="https://linkedin.com/in/rdevera" target="_blank">LinkedIn</a>
+        <a href="https://youtube.com/@play18daily" target="_blank">YouTube</a>
+        <a href="https://x.com/rickdevera" target="_blank">X</a>
       </div>
     </div>
   </footer>
 </div>
 
-<!-- ═══════════════════════════════
-     LABS
-═══════════════════════════════ -->
+<!-- ═══════════════════════════════════  LABS  -->
 <div class="page" id="page-labs">
   <div class="page-header">
     <div class="container">
-      <span class="label">Labs</span>
+      <span class="eyebrow">Labs</span>
       <h1>Working Implementations</h1>
-      <p>Hands-on lab environments built to test architectures, validate controls, and surface the operational reality behind the documentation.</p>
+      <p>Hands-on environments and tooling built to validate security architectures, test integration patterns, and surface what the documentation doesn't cover.</p>
     </div>
   </div>
-
   <div class="container">
-    <div class="labs-grid" style="margin-top: 0; border-top: none;">
+    <table class="labs-table">
+      <thead>
+        <tr>
+          <th style="width:54%">Lab</th>
+          <th style="width:22%">Stack</th>
+          <th style="width:10%">Forks</th>
+          <th class="right" style="width:14%">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="lab-title-cell">
+            <div class="lab-title">Tenable AWS JAM Demo</div>
+            <div class="lab-desc">Terraform/HCL templates integrating Tenable Cloud Security into AWS JAM workshop environments. Built for practitioner-level enablement and used across the field.</div>
+          </td>
+          <td><div class="lab-tech"><span>HCL</span><span>Terraform</span><span>AWS</span></div></td>
+          <td><span class="lab-forks">25</span></td>
+          <td style="text-align:right"><span class="status-pill status-live">Live</span></td>
+        </tr>
+        <tr>
+          <td class="lab-title-cell">
+            <div class="lab-title">Tenable AWS JAM — CloudFormation</div>
+            <div class="lab-desc">CloudFormation version of the AWS JAM integration. Parallel track for teams working outside Terraform pipelines.</div>
+          </td>
+          <td><div class="lab-tech"><span>CFT</span><span>AWS</span></div></td>
+          <td><span class="lab-forks">14</span></td>
+          <td style="text-align:right"><span class="status-pill status-live">Live</span></td>
+        </tr>
+        <tr>
+          <td class="lab-title-cell">
+            <div class="lab-title">Terrascan Assessment Tool</div>
+            <div class="lab-desc">IaC security scanning using Terrascan and Open Policy Agent. Detects compliance violations across Terraform configurations before provisioning.</div>
+          </td>
+          <td><div class="lab-tech"><span>HCL</span><span>OPA</span><span>IaC</span></div></td>
+          <td><span class="lab-forks">—</span></td>
+          <td style="text-align:right"><span class="status-pill status-live">Live</span></td>
+        </tr>
+        <tr>
+          <td class="lab-title-cell">
+            <div class="lab-title">Check Point Automation</div>
+            <div class="lab-desc">Automated VM provisioning for Check Point environments — no console GUI, no First Time Wizard. Enables repeatable POC environments without long-term eval licensing.</div>
+          </td>
+          <td><div class="lab-tech"><span>Automation</span><span>Check Point</span></div></td>
+          <td><span class="lab-forks">—</span></td>
+          <td style="text-align:right"><span class="status-pill status-live">Live</span></td>
+        </tr>
+        <tr>
+          <td class="lab-title-cell">
+            <div class="lab-title">Phantom + Check Point Integration</div>
+            <div class="lab-desc">SOAR integration connecting Splunk Phantom with Check Point for automated threat response workflows.</div>
+          </td>
+          <td><div class="lab-tech"><span>Phantom</span><span>SOAR</span><span>Check Point</span></div></td>
+          <td><span class="lab-forks">1</span></td>
+          <td style="text-align:right"><span class="status-pill status-live">Live</span></td>
+        </tr>
+        <tr>
+          <td class="lab-title-cell">
+            <div class="lab-title">AI Governance Lab</div>
+            <div class="lab-desc">Hands-on governance patterns for AI services in cloud environments — enforcement models, access controls, and audit frameworks grounded in real deployments.</div>
+          </td>
+          <td><div class="lab-tech"><span>AWS</span><span>AI</span><span>Governance</span></div></td>
+          <td><span class="lab-forks">—</span></td>
+          <td style="text-align:right"><span class="status-pill status-roadmap">2026</span></td>
+        </tr>
+        <tr>
+          <td class="lab-title-cell">
+            <div class="lab-title">CNAPP + Cloud Integration Blueprint</div>
+            <div class="lab-desc">Practical enablement model for integrating CNAPP tooling into modern multi-cloud architectures. Includes service comparisons and tradeoff analysis.</div>
+          </td>
+          <td><div class="lab-tech"><span>CNAPP</span><span>AWS</span><span>GCP</span><span>Azure</span></div></td>
+          <td><span class="lab-forks">—</span></td>
+          <td style="text-align:right"><span class="status-pill status-roadmap">2026</span></td>
+        </tr>
+      </tbody>
+    </table>
 
-      <div class="lab-item">
-        <div class="lab-meta">
-          <span class="lab-status active">Active</span>
-          <span class="lab-date">Updated Jun 2025</span>
-        </div>
-        <h4>Zero Trust Network Architecture on AWS</h4>
-        <p>A complete implementation of zero trust principles across a multi-account AWS environment. Covers identity-aware proxies, micro-segmentation via security groups and network firewall, and continuous verification with AWS Verified Access.</p>
-        <div class="lab-tags">
-          <span class="lab-tag">AWS</span>
-          <span class="lab-tag">Networking</span>
-          <span class="lab-tag">IAM</span>
-          <span class="lab-tag">Zero Trust</span>
-        </div>
-      </div>
+    <div class="roadmap-note">
+      <strong>2026 Field Architect Initiative</strong>
+      <p>Building a structured series of lab-backed architecture insights covering AI governance, cloud-native security integration, and CNAPP strategy — designed for architects and security engineers who need something they can actually run.</p>
+    </div>
 
-      <div class="lab-item">
-        <div class="lab-meta">
-          <span class="lab-status active">Active</span>
-          <span class="lab-date">Updated May 2025</span>
-        </div>
-        <h4>LLM Access Control Patterns</h4>
-        <p>Testing enforcement mechanisms for enterprise AI deployments. Evaluates prompt-layer guardrails, API gateway controls, and output filtering. Documents what the frameworks say versus what actually holds under adversarial testing.</p>
-        <div class="lab-tags">
-          <span class="lab-tag">LLM</span>
-          <span class="lab-tag">AI Security</span>
-          <span class="lab-tag">Access Control</span>
-        </div>
-      </div>
-
-      <div class="lab-item">
-        <div class="lab-meta">
-          <span class="lab-status">Archived</span>
-          <span class="lab-date">Mar 2025</span>
-        </div>
-        <h4>Policy-as-Code with OPA + Terraform</h4>
-        <p>Integrating Open Policy Agent into a Terraform deployment pipeline. Rego policies enforce tagging, encryption requirements, and resource configuration before any plan reaches the apply stage.</p>
-        <div class="lab-tags">
-          <span class="lab-tag">OPA</span>
-          <span class="lab-tag">Terraform</span>
-          <span class="lab-tag">Policy</span>
-          <span class="lab-tag">IaC</span>
-        </div>
-      </div>
-
-      <div class="lab-item">
-        <div class="lab-meta">
-          <span class="lab-status active">Active</span>
-          <span class="lab-date">Updated Apr 2025</span>
-        </div>
-        <h4>SIEM Detection Engineering Lab</h4>
-        <p>A home-lab SIEM environment using Elastic Security for developing and testing detection rules against simulated attacker behavior. Includes Atomic Red Team test coverage mapping.</p>
-        <div class="lab-tags">
-          <span class="lab-tag">SIEM</span>
-          <span class="lab-tag">Detection</span>
-          <span class="lab-tag">Elastic</span>
-          <span class="lab-tag">Blue Team</span>
-        </div>
-      </div>
-
-      <div class="lab-item">
-        <div class="lab-meta">
-          <span class="lab-status">In Progress</span>
-          <span class="lab-date">Started Jul 2025</span>
-        </div>
-        <h4>Agentic AI Workflow Security</h4>
-        <p>Examining the security implications of multi-agent AI workflows. Focus on privilege boundaries, tool-use authorization, and audit logging for autonomous agent actions in enterprise environments.</p>
-        <div class="lab-tags">
-          <span class="lab-tag">AI Agents</span>
-          <span class="lab-tag">Security</span>
-          <span class="lab-tag">Governance</span>
-        </div>
-      </div>
-
-      <div class="lab-item">
-        <div class="lab-meta">
-          <span class="lab-status">Archived</span>
-          <span class="lab-date">Jan 2025</span>
-        </div>
-        <h4>Kubernetes Secrets Management at Scale</h4>
-        <p>Comparative evaluation of secrets management approaches in Kubernetes: External Secrets Operator with Vault versus AWS Secrets Manager CSI driver. Performance, operational overhead, and failure mode analysis.</p>
-        <div class="lab-tags">
-          <span class="lab-tag">Kubernetes</span>
-          <span class="lab-tag">Secrets</span>
-          <span class="lab-tag">Vault</span>
-          <span class="lab-tag">AWS</span>
-        </div>
-      </div>
-
+    <div style="margin-top:32px; padding-bottom:80px;">
+      <a class="btn btn-outline" href="https://github.com/rickdevera" target="_blank">All repos on GitHub →</a>
     </div>
   </div>
 
   <footer>
     <div class="footer-inner">
-      <p class="footer-left">© 2025 Richard Devera</p>
-      <div class="footer-right">
-        <a href="https://github.com" target="_blank">GitHub</a>
-        <a href="https://linkedin.com" target="_blank">LinkedIn</a>
-        <a href="#">RSS</a>
+      <span class="footer-copy">© 2025 Richard Devera</span>
+      <div class="footer-links">
+        <a href="https://github.com/rickdevera" target="_blank">GitHub</a>
+        <a href="https://linkedin.com/in/rdevera" target="_blank">LinkedIn</a>
+        <a href="https://youtube.com/@play18daily" target="_blank">YouTube</a>
+        <a href="https://x.com/rickdevera" target="_blank">X</a>
       </div>
     </div>
   </footer>
 </div>
 
-<!-- ═══════════════════════════════
-     JOURNAL
-═══════════════════════════════ -->
+<!-- ═══════════════════════════════════  JOURNAL  -->
 <div class="page" id="page-journal">
-  <div class="page-header">
-    <div class="container">
-      <span class="label">Journal</span>
-      <h1>Notes from the Work</h1>
-      <p>Field notes, post-mortems, and honest assessments from building and operating cloud and AI systems. Written for practitioners.</p>
+  <div class="journal-full">
+    <div class="journal-full-inner">
+      <span class="eyebrow">Journal</span>
+      <h1>Coming<br><em>soon.</em></h1>
+      <p>Field notes, architecture decisions, and honest assessments from building cloud and AI systems. Posts will appear here when they're ready — not before.</p>
+      <div class="journal-cta">
+        <a class="btn btn-primary" href="https://linkedin.com/in/rdevera" target="_blank">LinkedIn</a>
+        <a class="btn btn-outline" href="https://github.com/rickdevera" target="_blank">GitHub</a>
+      </div>
     </div>
   </div>
-
-  <div class="container">
-    <div class="journal-list">
-
-      <div class="journal-entry">
-        <div class="journal-entry-date">June 2025</div>
-        <div class="journal-entry-body">
-          <span class="journal-entry-cat">Security Operations</span>
-          <h4>What I Got Wrong About Secrets Management</h4>
-          <p>After three years of recommending the same rotation pattern, a red team exercise exposed a timing gap I had consistently overlooked. The vulnerability wasn't in the mechanism—it was in my assumptions about how applications cached credentials. Notes on what the test revealed and how the pattern changed.</p>
-          <a class="journal-entry-readmore">Read Entry →</a>
-        </div>
-      </div>
-
-      <div class="journal-entry">
-        <div class="journal-entry-date">April 2025</div>
-        <div class="journal-entry-body">
-          <span class="journal-entry-cat">AI Practitioner</span>
-          <h4>AI Copilots in SOC Workflows: A Practical Review</h4>
-          <p>Six weeks of running an AI assistant alongside a real detection and response workflow. Alert triage accelerated meaningfully. Threat hunting, where context is everything, did not improve as much. Notes on where the boundary sits and why it matters for tooling decisions.</p>
-          <a class="journal-entry-readmore">Read Entry →</a>
-        </div>
-      </div>
-
-      <div class="journal-entry">
-        <div class="journal-entry-date">February 2025</div>
-        <div class="journal-entry-body">
-          <span class="journal-entry-cat">Lab Notes</span>
-          <h4>Building a Home Lab That Mirrors Production</h4>
-          <p>The gap between test and production is where learning atrophies. I rebuilt my home lab around the principle that every control I implement professionally should have a runnable equivalent locally. The constraints that shaped the architecture and what I would do differently now.</p>
-          <a class="journal-entry-readmore">Read Entry →</a>
-        </div>
-      </div>
-
-      <div class="journal-entry">
-        <div class="journal-entry-date">December 2024</div>
-        <div class="journal-entry-body">
-          <span class="journal-entry-cat">Cloud Architecture</span>
-          <h4>Multi-Account AWS: Patterns That Have Held Up</h4>
-          <p>Two years into a multi-account AWS architecture designed around Landing Zone principles. What the original design got right, what had to be revisited as the organization scaled, and which decisions created the most downstream complexity.</p>
-          <a class="journal-entry-readmore">Read Entry →</a>
-        </div>
-      </div>
-
-      <div class="journal-entry">
-        <div class="journal-entry-date">October 2024</div>
-        <div class="journal-entry-body">
-          <span class="journal-entry-cat">AI Governance</span>
-          <h4>Reading the NIST AI RMF: What's Useful, What's Vague</h4>
-          <p>The NIST AI Risk Management Framework is thorough. It is also, in places, written at an altitude where practical implementation is unclear. An annotated reading focused on what translates to actionable controls and where practitioners are left to interpret.</p>
-          <a class="journal-entry-readmore">Read Entry →</a>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <footer>
-    <div class="footer-inner">
-      <p class="footer-left">© 2025 Richard Devera</p>
-      <div class="footer-right">
-        <a href="https://github.com" target="_blank">GitHub</a>
-        <a href="https://linkedin.com" target="_blank">LinkedIn</a>
-        <a href="#">RSS</a>
-      </div>
-    </div>
-  </footer>
 </div>
 
-<!-- ═══════════════════════════════
-     ABOUT
-═══════════════════════════════ -->
+<!-- ═══════════════════════════════════  ABOUT  -->
 <div class="page" id="page-about">
   <div class="container">
     <div class="about-layout">
-      <div class="about-main">
-        <span class="label">About</span>
-        <h2>Architect, practitioner, and lifelong student of systems.</h2>
-        <p>I work as a Cloud Security Architect with a focus on building and validating the controls that organizations depend on to operate safely in cloud-native environments. My background spans network security, identity and access management, infrastructure automation, and—more recently—the governance and enablement challenges that come with deploying AI systems at scale. I've spent more time in infrastructure terminals than in slide decks, and I believe the most durable technical knowledge comes from building things that fail in ways you didn't predict.</p>
-        <p>Over the past several years, my work has increasingly intersected with AI—not the hype, but the practical questions organizations face when integrating AI into workflows that carry real risk. How do you establish access boundaries for an autonomous agent? What does audit logging look like when the actor is a language model? These are engineering problems, and I approach them the way I approach cloud security: start with threat modeling, build controls, test them, revise. This site documents the work in progress.</p>
+      <div class="about-bio">
+        <span class="eyebrow">About</span>
+        <h2>Principal Solutions Architect.<br>Field-focused technologist.</h2>
+        <p>I work at the intersection of cloud security, infrastructure, and AI — focused on building and validating the controls that organizations actually depend on. My background spans network security, identity and access management, infrastructure automation, and CNAPP strategy across AWS, GCP, and Azure. At Tenable, I serve as Technical Alliance Architect for cloud providers, leading technical enablement and working directly with cloud platform architects to develop integration patterns and lab-backed solutions.</p>
+        <p>Earlier in my career I worked at Check Point in roles from Security Engineer through Regional Director, and before that as a Senior Software Engineering Lead at Lockheed Martin and Software Engineer at United Space Alliance — where my foundation in systems thinking and rigorous testing was built. I've been a practitioner first throughout, and I believe architecture is only valuable when it can be implemented and validated in the real world.</p>
 
         <div class="about-divider"></div>
-
-        <span class="label">How I Work</span>
-        <div class="how-i-work">
+        <span class="section-label">How I Work</span>
+        <div>
           <div class="how-item">
-            <span class="how-item-label">Lab First</span>
-            <p>Before writing or recommending anything, I build it. Lab environments exist so that assumptions can be tested against reality rather than documented around it.</p>
+            <span class="how-label">Lab First</span>
+            <p class="how-body">Before publishing or recommending anything, I build it. Lab environments aren't for demo purposes — they're where assumptions get tested against reality.</p>
           </div>
           <div class="how-item">
-            <span class="how-item-label">Documented Honestly</span>
-            <p>Notes include what didn't work. Failure modes are often more informative than success paths, and practitioners deserve accurate accounts of both.</p>
+            <span class="how-label">Honest Documentation</span>
+            <p class="how-body">Notes include what didn't work. The edge cases and failure modes are often more valuable than the happy path.</p>
           </div>
           <div class="how-item">
-            <span class="how-item-label">Slowly and Thoroughly</span>
-            <p>I publish infrequently. Each post or lab represents something I've spent enough time with to have genuine confidence in what I'm sharing.</p>
+            <span class="how-label">Enablement Over Hype</span>
+            <p class="how-body">Workshops, walkthroughs, and architecture guides are written for practitioners who need to execute — not for audiences who just need to be impressed.</p>
           </div>
           <div class="how-item">
-            <span class="how-item-label">Without Affiliations</span>
-            <p>No sponsored content, no vendor relationships, no affiliate links. The assessments here are based on what I've run in my own environments.</p>
+            <span class="how-label">Continuously Revising</span>
+            <p class="how-body">Cloud security and AI don't sit still. What held up last year may not hold up today. I revisit old recommendations regularly.</p>
           </div>
         </div>
 
-        <div class="personal-link-block">
-          <p>Outside of cloud and security, I build things with my hands—3D printing, woodworking, and the occasional DIY project. There's a shared discipline in both domains: measure carefully, test before committing, and don't ignore what the material is telling you.</p>
+        <div class="personal-callout">
+          <p>Outside the screen I build things with my hands — 3D printing, woodworking, DIY, and golf. The same instincts apply: measure carefully, test before committing, and don't ignore what the material is telling you.</p>
           <button class="btn btn-outline" onclick="showPage('personal')">View Personal Projects →</button>
         </div>
       </div>
 
-      <div class="about-sidebar">
+      <div>
         <div class="sidebar-block">
           <h3>Focus Areas</h3>
-          <ul class="focus-list">
-            <li><span class="focus-dot"></span>Cloud Security Architecture</li>
-            <li><span class="focus-dot"></span>Identity & Access Management</li>
-            <li><span class="focus-dot"></span>Infrastructure as Code</li>
-            <li><span class="focus-dot"></span>Detection Engineering</li>
-            <li><span class="focus-dot"></span>AI Governance & Enablement</li>
-            <li><span class="focus-dot"></span>Security Program Development</li>
-            <li><span class="focus-dot"></span>Agentic System Security</li>
+          <ul class="dot-list">
+            <li><span class="dot"></span>Cloud Security Architecture</li>
+            <li><span class="dot"></span>CNAPP Strategy & Integration</li>
+            <li><span class="dot"></span>Infrastructure as Code</li>
+            <li><span class="dot"></span>AI Governance & Enablement</li>
+            <li><span class="dot"></span>Identity & Access Management</li>
+            <li><span class="dot"></span>Security Automation</li>
+            <li><span class="dot"></span>Workshop-Driven Enablement</li>
           </ul>
         </div>
 
         <div class="sidebar-block">
-          <h3>Elsewhere</h3>
-          <ul class="focus-list">
-            <li><span class="focus-dot"></span><a href="https://github.com" target="_blank" style="color:inherit;text-decoration:none;">GitHub</a></li>
-            <li><span class="focus-dot"></span><a href="https://linkedin.com" target="_blank" style="color:inherit;text-decoration:none;">LinkedIn</a></li>
+          <h3>Career</h3>
+          <div class="career-item">
+            <div class="career-co">Tenable</div>
+            <div class="career-role">Principal Solutions Architect</div>
+          </div>
+          <div class="career-item">
+            <div class="career-co">Check Point</div>
+            <div class="career-role">Regional Director → Security Engineer</div>
+          </div>
+          <div class="career-item">
+            <div class="career-co">Lockheed Martin</div>
+            <div class="career-role">Sr. Software Engineering Lead</div>
+          </div>
+          <div class="career-item">
+            <div class="career-co">United Space Alliance</div>
+            <div class="career-role">Software Engineer</div>
+          </div>
+        </div>
+
+        <div class="sidebar-block">
+          <h3>Find Me</h3>
+          <ul class="dot-list">
+            <li><span class="dot"></span><a href="https://github.com/rickdevera" target="_blank" style="color:inherit;text-decoration:none;">github.com/rickdevera</a></li>
+            <li><span class="dot"></span><a href="https://linkedin.com/in/rdevera" target="_blank" style="color:inherit;text-decoration:none;">linkedin.com/in/rdevera</a></li>
+            <li><span class="dot"></span><a href="https://youtube.com/@play18daily" target="_blank" style="color:inherit;text-decoration:none;">youtube/@play18daily</a></li>
+            <li><span class="dot"></span><a href="https://x.com/rickdevera" target="_blank" style="color:inherit;text-decoration:none;">x.com/rickdevera</a></li>
           </ul>
         </div>
       </div>
@@ -957,83 +725,69 @@
 
   <footer>
     <div class="footer-inner">
-      <p class="footer-left">© 2025 Richard Devera</p>
-      <div class="footer-right">
-        <a href="https://github.com" target="_blank">GitHub</a>
-        <a href="https://linkedin.com" target="_blank">LinkedIn</a>
-        <a href="#">RSS</a>
+      <span class="footer-copy">© 2025 Richard Devera</span>
+      <div class="footer-links">
+        <a href="https://github.com/rickdevera" target="_blank">GitHub</a>
+        <a href="https://linkedin.com/in/rdevera" target="_blank">LinkedIn</a>
+        <a href="https://youtube.com/@play18daily" target="_blank">YouTube</a>
+        <a href="https://x.com/rickdevera" target="_blank">X</a>
       </div>
     </div>
   </footer>
 </div>
 
-<!-- ═══════════════════════════════
-     PERSONAL
-═══════════════════════════════ -->
+<!-- ═══════════════════════════════════  PERSONAL  -->
 <div class="page" id="page-personal">
   <div class="page-header">
     <div class="container">
-      <span class="label">Personal</span>
+      <span class="eyebrow">Personal</span>
       <h1>Maker Projects</h1>
-      <p>Outside of the screen, I work with physical materials. The same instincts apply: understand the constraints, prototype carefully, and accept that the material has the final say.</p>
+      <p>Outside the cloud console, I work with physical materials. The same discipline applies — understand the constraints, prototype before committing, and respect what the material is telling you.</p>
     </div>
   </div>
-
   <div class="container">
     <div class="maker-grid">
-
       <div class="maker-item">
-        <span class="maker-icon">⬡</span>
-        <span class="maker-category">3D Printing</span>
+        <span class="maker-cat">3D Printing</span>
         <h4>Functional Prototyping</h4>
-        <p>FDM and resin printing focused on functional parts rather than decorative models. Current projects include custom cable management solutions for the lab rack and replacement components for older equipment that's no longer supported.</p>
+        <p>FDM printing focused on functional parts, not decorative models. Current work includes lab rack cable management, custom enclosures, and replacement parts for gear that's no longer supported.</p>
       </div>
-
       <div class="maker-item">
-        <span class="maker-icon">⬜</span>
-        <span class="maker-category">Woodworking</span>
+        <span class="maker-cat">Woodworking</span>
         <h4>Furniture & Shop Fixtures</h4>
-        <p>Hand-tool and power-tool woodworking. Built a standing desk, shop storage, and a few pieces of furniture over the past few years. Interested in joinery and building things designed to outlast their maker.</p>
+        <p>Hand-tool and power-tool work. Built a standing desk, workshop storage, and several pieces of furniture. Interested in joinery and building things designed to outlast the trend.</p>
       </div>
-
       <div class="maker-item">
-        <span class="maker-icon">◎</span>
-        <span class="maker-category">Golf</span>
+        <span class="maker-cat">Golf</span>
         <h4>Precision Practice</h4>
-        <p>Golf as a discipline: the gap between intention and execution is always measurable. Working on consistency through deliberate practice and tracking metrics that matter. Handicap trending in the right direction.</p>
+        <p>Golf as a discipline in managing the gap between intention and execution. Working on consistency through deliberate practice and metrics that actually matter.</p>
       </div>
-
       <div class="maker-item">
-        <span class="maker-icon">⌧</span>
-        <span class="maker-category">Electronics & DIY</span>
-        <h4>Raspberry Pi & Home Automation</h4>
-        <p>Running a home automation setup built on Home Assistant with local-first principles—no cloud dependencies for core functionality. Also experimenting with small sensor networks for environmental monitoring.</p>
-      </div>
-
-      <div class="maker-item">
-        <span class="maker-icon">▣</span>
-        <span class="maker-category">Home Lab</span>
+        <span class="maker-cat">Home Lab</span>
         <h4>Physical Infrastructure</h4>
-        <p>The lab rack is half the project. Custom cable runs, proper patch panel layout, and quiet cooling are as important as what the servers are running. Ongoing iteration as the workload mix changes.</p>
+        <p>The rack is half the project. Proper cable runs, patch panel layout, and quiet cooling matter as much as what the servers are running. Ongoing iteration as the workload changes.</p>
       </div>
-
       <div class="maker-item">
-        <span class="maker-icon">△</span>
-        <span class="maker-category">Outdoors</span>
-        <h4>Photography & Hiking</h4>
-        <p>Pacific Northwest hiking and landscape photography. Interested in light and how it changes familiar terrain. Shooting mostly on a mirrorless kit, editing in Lightroom, keeping a private archive.</p>
+        <span class="maker-cat">DIY</span>
+        <h4>Home Projects</h4>
+        <p>General home improvement and problem-solving with tools. The same diagnostic approach from security work applies: understand the system before touching it.</p>
       </div>
-
+      <div class="maker-item">
+        <span class="maker-cat">Electronics</span>
+        <h4>Home Automation</h4>
+        <p>Running a local-first home automation setup. No cloud dependencies for core functionality. Experimenting with small sensor networks and integration patterns.</p>
+      </div>
     </div>
   </div>
 
-  <footer style="margin-top: 60px;">
+  <footer style="margin-top:80px;">
     <div class="footer-inner">
-      <p class="footer-left">© 2025 Richard Devera</p>
-      <div class="footer-right">
-        <a href="https://github.com" target="_blank">GitHub</a>
-        <a href="https://linkedin.com" target="_blank">LinkedIn</a>
-        <a href="#">RSS</a>
+      <span class="footer-copy">© 2025 Richard Devera</span>
+      <div class="footer-links">
+        <a href="https://github.com/rickdevera" target="_blank">GitHub</a>
+        <a href="https://linkedin.com/in/rdevera" target="_blank">LinkedIn</a>
+        <a href="https://youtube.com/@play18daily" target="_blank">YouTube</a>
+        <a href="https://x.com/rickdevera" target="_blank">X</a>
       </div>
     </div>
   </footer>
@@ -1043,21 +797,12 @@
   function showPage(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-
     const page = document.getElementById('page-' + name);
-    if (page) {
-      page.classList.add('active');
-      // Force reflow for animation
-      void page.offsetWidth;
-    }
-
+    if (page) { page.classList.remove('active'); void page.offsetWidth; page.classList.add('active'); }
     const link = document.querySelector('[data-page="' + name + '"]');
     if (link) link.classList.add('active');
-
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
-
-  // Set initial active nav state
   document.querySelector('[data-page="home"]').classList.add('active');
 </script>
 </body>
