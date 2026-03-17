@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS PRM Cross-Account Workflow</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f1117;
+    color: #e2e8f0;
+    min-height: 100vh;
+    padding: 32px 16px;
+  }
+
+  .page { max-width: 960px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 40px; }
+  header h1 { font-size: 22px; font-weight: 600; color: #f1f5f9; margin-bottom: 6px; }
+  header p { font-size: 13px; color: #94a3b8; }
+
+  /* Lane layout */
+  .lanes {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    position: relative;
+  }
+
+  .lane {
+    padding: 0 12px;
+    position: relative;
+  }
+
+  .lane-header {
+    text-align: center;
+    padding: 10px 16px;
+    border-radius: 8px 8px 0 0;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .lane-customer .lane-header { background: #1e3a5f; color: #7dd3fc; border: 1px solid #1d4ed8; }
+  .lane-marketplace .lane-header { background: #2d1b69; color: #c4b5fd; border: 1px solid #7c3aed; }
+  .lane-production .lane-header { background: #064e3b; color: #6ee7b7; border: 1px solid #059669; }
+
+  .lane-customer { border-left: 1px dashed #1d4ed820; }
+  .lane-marketplace { border-left: 1px dashed #7c3aed20; border-right: 1px dashed #7c3aed20; }
+  .lane-production { border-right: 1px dashed #05966920; }
+
+  /* Step cards */
+  .step {
+    position: relative;
+    background: #1e2433;
+    border: 1px solid #2d3748;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.15s;
+    user-select: none;
+  }
+
+  .step:hover { transform: translateY(-2px); border-color: #4a5568; background: #252d3d; }
+  .step.active { border-color: currentColor; background: #1a2035; }
+
+  .step-num {
+    display: inline-block;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    line-height: 22px;
+    margin-bottom: 8px;
+  }
+
+  .step-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .step-sub { font-size: 11px; color: #94a3b8; line-height: 1.4; }
+
+  /* Color themes per lane */
+  .lane-customer .step { color: #7dd3fc; }
+  .lane-customer .step .step-num { background: #1e3a5f; color: #7dd3fc; }
+  .lane-customer .step.active { border-color: #3b82f6; }
+
+  .lane-marketplace .step { color: #c4b5fd; }
+  .lane-marketplace .step .step-num { background: #2d1b69; color: #c4b5fd; }
+  .lane-marketplace .step.active { border-color: #8b5cf6; }
+
+  .lane-production .step { color: #6ee7b7; }
+  .lane-production .step .step-num { background: #064e3b; color: #6ee7b7; }
+  .lane-production .step.active { border-color: #10b981; }
+
+  /* Warning step */
+  .step.warning { color: #fbbf24; }
+  .step.warning .step-num { background: #451a03; color: #fbbf24; }
+  .step.warning.active { border-color: #f59e0b; }
+
+  /* Success step */
+  .step.success { color: #34d399; }
+  .step.success .step-num { background: #022c22; color: #34d399; }
+  .step.success.active { border-color: #059669; }
+
+  /* Fail step */
+  .step.fail { color: #f87171; }
+  .step.fail .step-num { background: #450a0a; color: #f87171; }
+  .step.fail.active { border-color: #dc2626; }
+
+  /* Cross-account arrow */
+  .cross-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 8px 0;
+    gap: 8px;
+    font-size: 11px;
+    color: #64748b;
+  }
+  .cross-arrow::before, .cross-arrow::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #334155;
+    border-top: 1px dashed #475569;
+  }
+
+  /* Detail panel */
+  #detail-panel {
+    margin-top: 32px;
+    background: #1e2433;
+    border: 1px solid #2d3748;
+    border-radius: 12px;
+    padding: 24px;
+    min-height: 120px;
+    transition: opacity 0.2s;
+  }
+
+  #detail-panel.empty { opacity: 0.4; }
+
+  .detail-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+
+  .tag-customer { background: #1e3a5f; color: #7dd3fc; }
+  .tag-marketplace { background: #2d1b69; color: #c4b5fd; }
+  .tag-production { background: #064e3b; color: #6ee7b7; }
+  .tag-warning { background: #451a03; color: #fbbf24; }
+  .tag-success { background: #022c22; color: #34d399; }
+  .tag-fail { background: #450a0a; color: #f87171; }
+
+  #detail-title { font-size: 16px; font-weight: 600; color: #f1f5f9; margin-bottom: 8px; }
+  #detail-body { font-size: 13px; color: #94a3b8; line-height: 1.7; }
+  #detail-body strong { color: #cbd5e1; font-weight: 600; }
+
+  code {
+    background: #0f1117;
+    border: 1px solid #2d3748;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 11px;
+    font-family: "SF Mono", "Fira Code", monospace;
+    color: #7dd3fc;
+  }
+
+  pre {
+    background: #0f1117;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 11px;
+    font-family: "SF Mono", "Fira Code", monospace;
+    color: #a5f3fc;
+    overflow-x: auto;
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+
+  .hint {
+    text-align: center;
+    font-size: 12px;
+    color: #475569;
+    margin-top: 12px;
+  }
+
+  /* Down arrows between steps in same lane */
+  .down-arrow {
+    text-align: center;
+    color: #334155;
+    font-size: 16px;
+    line-height: 1;
+    margin: -4px 0;
+  }
+
+  /* Notification badges */
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+  .badge-new { background: #1d4ed8; color: #bfdbfe; }
+  .badge-legacy { background: #374151; color: #9ca3af; }
+
+  footer {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 11px;
+    color: #334155;
+  }
+  footer a { color: #475569; text-decoration: none; }
+  footer a:hover { color: #64748b; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <h1>AWS Partner Revenue Measurement — Cross-Account Workflow</h1>
+    <p>Marketplace account ≠ Production account &nbsp;·&nbsp; Click any step to learn more</p>
+  </header>
+
+  <div class="lanes">
+
+    <!-- CUSTOMER LANE -->
+    <div class="lane lane-customer">
+      <div class="lane-header">Customer</div>
+
+      <div class="step" data-step="1" onclick="show(1)">
+        <div class="step-num">1</div>
+        <div class="step-title">Browse & subscribe</div>
+        <div class="step-sub">Selects solution on AWS Marketplace listing page</div>
+      </div>
+
+      <div class="down-arrow">↓</div>
+
+      <div class="step" data-step="2" onclick="show(2)">
+        <div class="step-num">2</div>
+        <div class="step-title">Redirected to partner</div>
+        <div class="step-sub">Browser POSTs token to registration landing page</div>
+      </div>
+
+      <div class="down-arrow">↓</div>
+
+      <div class="step" data-step="3" onclick="show(3)">
+        <div class="step-num">3</div>
+        <div class="step-title">Account created / linked</div>
+        <div class="step-sub">Signs in or registers in partner product</div>
+      </div>
+
+    </div>
+
+    <!-- MARKETPLACE ACCOUNT LANE -->
+    <div class="lane lane-marketplace">
+      <div class="lane-header">Partner — Marketplace Acct</div>
+
+      <div class="step" data-step="4" onclick="show(4)">
+        <div class="step-num">4</div>
+        <div class="step-title">Subscription created</div>
+        <div class="step-sub">AWS bills customer · registration token generated</div>
+      </div>
+
+      <div class="down-arrow">↓</div>
+
+      <div class="step" data-step="5" onclick="show(5)">
+        <div class="step-num">5</div>
+        <div class="step-title">ResolveCustomer called</div>
+        <div class="step-sub">Token exchanged for CustomerID + ProductCode</div>
+      </div>
+
+      <div class="down-arrow">↓</div>
+
+      <div class="step" data-step="6" onclick="show(6)">
+        <div class="step-num">6</div>
+        <div class="step-title">EventBridge notification</div>
+        <div class="step-sub">subscribe-success fired → SQS queue <span class="badge badge-new">New</span></div>
+      </div>
+
+      <div class="down-arrow">↓</div>
+
+      <div class="step warning" data-step="7" onclick="show(7)">
+        <div class="step-num">!</div>
+        <div class="step-title">Cross-account handoff</div>
+        <div class="step-sub">ProductCode passed to production account securely</div>
+      </div>
+
+    </div>
+
+    <!-- PRODUCTION ACCOUNT LANE -->
+    <div class="lane lane-production">
+      <div class="lane-header">Partner — Production Acct</div>
+
+      <div class="step" data-step="8" onclick="show(8)">
+        <div class="step-num">8</div>
+        <div class="step-title">ProductCode received</div>
+        <div class="step-sub">Via SSM / Secrets Manager / pipeline env var</div>
+      </div>
+
+      <div class="down-arrow">↓</div>
+
+      <div class="step" data-step="9" onclick="show(9)">
+        <div class="step-num">9</div>
+        <div class="step-title">IaC pipeline runs</div>
+        <div class="step-sub">CloudFormation / CDK / Terraform provisions resources</div>
+      </div>
+
+      <div class="down-arrow">↓</div>
+
+      <div class="step" data-step="10" onclick="show(10)">
+        <div class="step-num">10</div>
+        <div class="step-title">Resources tagged at creation</div>
+        <div class="step-sub"><code>aws-apn-id = pc:&lt;product-code&gt;</code></div>
+      </div>
+
+      <div class="down-arrow">↓</div>
+
+      <div class="step success" data-step="11" onclick="show(11)">
+        <div class="step-num">✓</div>
+        <div class="step-title">Revenue attribution active</div>
+        <div class="step-sub">AWS reports consumption data to Partner Central</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Detail panel -->
+  <div id="detail-panel" class="empty">
+    <p style="text-align:center; color:#475569; font-size:13px; margin-top: 24px;">← Click any step above to see details</p>
+  </div>
+
+  <p class="hint">Powered by AWS Partner Revenue Measurement (PRM) · <a href="https://docs.aws.amazon.com/PRM/latest/aws-prm-onboarding-guide/getting-started.html" target="_blank">AWS PRM Docs ↗</a></p>
+
+  <footer>
+    <p>References: <a href="https://docs.aws.amazon.com/marketplace/latest/userguide/saas-product-customer-setup.html" target="_blank">AWS Marketplace SaaS Onboarding</a> &nbsp;·&nbsp;
+    <a href="https://docs.aws.amazon.com/PRM/latest/aws-prm-onboarding-guide/prm-resource-tagging.html" target="_blank">PRM Resource Tagging</a> &nbsp;·&nbsp;
+    <a href="https://docs.aws.amazon.com/PRM/latest/aws-prm-onboarding-guide/automated-tagging.html" target="_blank">PRM Automated Tagging</a></p>
+  </footer>
+
+</div>
+
+<script>
+const steps = {
+  1: {
+    tag: 'customer', label: 'Customer',
+    title: 'Customer browses & subscribes on AWS Marketplace',
+    body: `The customer finds your solution on the AWS Marketplace listing page and clicks <strong>Subscribe</strong>. At this point AWS immediately subscribes their AWS account to your product — meaning all future metering records will appear on their AWS bill.
+    <br><br>
+    <strong>What the customer sees:</strong> A confirmation screen and a redirect to your registration page.`
+  },
+  2: {
+    tag: 'customer', label: 'Customer',
+    title: 'Customer browser POSTs token to your landing page',
+    body: `AWS redirects the customer's browser to your registration URL with an HTTP <code>POST</code> request. The POST body contains one parameter:
+    <pre>x-amzn-marketplace-token=&lt;opaque-token-string&gt;</pre>
+    If the offer is a free trial, a second parameter is included: <code>x-amzn-marketplace-offer-type=free-trial</code>.
+    <br><br>
+    <strong>Token expiry:</strong> The token expires after approximately 4 hours. Resolve it immediately.`
+  },
+  3: {
+    tag: 'customer', label: 'Customer',
+    title: 'Customer creates or links their account',
+    body: `Once your landing page verifies the token, you present the customer with a registration or sign-in flow specific to your SaaS product.
+    <br><br>
+    <strong>Best practice:</strong> Collect the customer's email address if you plan to send usage notifications. Store the resolved <code>CustomerAWSAccountId</code> in your database — verify no other account shares it.`
+  },
+  4: {
+    tag: 'marketplace', label: 'Marketplace Account',
+    title: 'Subscription created — AWS generates registration token',
+    body: `As soon as the customer subscribes, AWS Marketplace:
+    <br><br>
+    <strong>1.</strong> Subscribes the customer's AWS account to your product<br>
+    <strong>2.</strong> Generates a registration token containing:<br>
+    &nbsp;&nbsp;· Customer AWS Account ID<br>
+    &nbsp;&nbsp;· Customer Identifier<br>
+    &nbsp;&nbsp;· Your <strong>Product Code</strong> (the value you'll need for PRM tagging)<br><br>
+    <strong>3.</strong> Redirects the customer to your registration landing page`
+  },
+  5: {
+    tag: 'marketplace', label: 'Marketplace Account',
+    title: 'ResolveCustomer — exchange token for CustomerID + ProductCode',
+    body: `Your registration landing page calls <code>ResolveCustomer</code> on the AWS Marketplace Metering Service:
+    <pre>POST https://metering.marketplace.us-east-1.amazonaws.com/
+ResolveCustomer
+{
+  "RegistrationToken": "&lt;x-amzn-marketplace-token&gt;"
+}</pre>
+    The response returns:
+    <pre>{
+  "CustomerIdentifier": "X01EXAMPLEX",
+  "CustomerAWSAccountId": "123456789012",
+  "ProductCode": "n0123EXAMPLEXXXXXXXXXXXX"
+}</pre>
+    <strong>Persist the CustomerID and ProductCode</strong> — you'll need them for metering and PRM tagging.`
+  },
+  6: {
+    tag: 'marketplace', label: 'Marketplace Account',
+    title: 'EventBridge fires subscribe-success (replaces SNS for new listings)',
+    body: `AWS fires an EventBridge notification to your configured rules. Use Amazon SQS as the target to capture events reliably.
+    <br><br>
+    <strong>Key subscription states:</strong><br>
+    &nbsp;✅ <code>subscribe-success</code> — safe to provision resources and begin metering<br>
+    &nbsp;❌ <code>subscribe-fail</code> — do NOT provision or meter<br>
+    &nbsp;⚠️ <code>unsubscribe-pending</code> — send final metering records<br>
+    &nbsp;🔴 <code>unsubscribe-success</code> — shut down resources per your retention policy
+    <br><br>
+    <strong>Critical:</strong> Never provision resources or activate a subscription before receiving <code>subscribe-success</code>. Records sent before this event are not metered.
+    <br><br>
+    <strong>Note:</strong> SNS topics remain available for existing integrations but new listings transition to EventBridge.`
+  },
+  7: {
+    tag: 'warning', label: 'Key Challenge',
+    title: 'Cross-account handoff — passing ProductCode to production',
+    body: `This is the architectural gap unique to the cross-account scenario. The <strong>ProductCode lives in your Marketplace account</strong> but the <strong>resources that need tagging live in your production account</strong>.
+    <br><br>
+    <strong>Recommended patterns:</strong>
+    <br><br>
+    <strong>Option 1 — SSM Parameter Store</strong><br>
+    <pre>aws ssm put-parameter \\
+  --name "/prm/product-code" \\
+  --value "pc:&lt;product-code&gt;" \\
+  --type "String"</pre>
+    Then reference in CloudFormation: <code>{{resolve:ssm:/prm/product-code}}</code>
+    <br><br>
+    <strong>Option 2 — AWS Secrets Manager (cross-account)</strong><br>
+    Store in Marketplace account, grant production account read via resource policy.
+    <br><br>
+    <strong>Option 3 — CI/CD pipeline secret</strong><br>
+    Inject as an env var (GitHub Actions, CodePipeline) available at IaC execution time.`
+  },
+  8: {
+    tag: 'production', label: 'Production Account',
+    title: 'Production account receives the ProductCode',
+    body: `The production account's provisioning pipeline reads the ProductCode from whichever cross-account mechanism you chose (SSM, Secrets Manager, pipeline env var).
+    <br><br>
+    <strong>The value to store and use:</strong>
+    <pre>pc:&lt;your-marketplace-product-code&gt;</pre>
+    This value becomes the tag value for every resource provisioned on behalf of this customer.`
+  },
+  9: {
+    tag: 'production', label: 'Production Account',
+    title: 'IaC pipeline provisions resources',
+    body: `Your infrastructure-as-code template runs in the production account. The ProductCode must be injected at this stage — not applied after the fact.
+    <br><br>
+    <strong>CloudFormation:</strong>
+    <pre>Tags:
+  - Key: "aws-apn-id"
+    Value: !Sub "pc:{{resolve:ssm:/prm/product-code}}"</pre>
+    <strong>Terraform:</strong>
+    <pre>tags = {
+  aws-apn-id = "pc:&lt;product-code&gt;"
+}</pre>
+    <strong>CDK:</strong>
+    <pre>Tags.of(myStack).add("aws-apn-id", "pc:&lt;product-code&gt;")</pre>`
+  },
+  10: {
+    tag: 'production', label: 'Production Account',
+    title: 'Resources tagged at creation time',
+    body: `Every AWS resource provisioned by your solution is stamped with the PRM tag at creation:
+    <pre>Tag Key:   aws-apn-id
+Tag Value: pc:&lt;your-product-code&gt;</pre>
+    <strong>Supported services:</strong> Amazon EC2, S3, ECS, RDS (and other supported services — see AWS PRM docs).
+    <br><br>
+    <strong>Rules:</strong><br>
+    · Always lowercase key: <code>aws-apn-id</code><br>
+    · Always include <code>pc:</code> prefix in the value<br>
+    · Only one <code>aws-apn-id</code> tag per resource — remove conflicting tags first<br>
+    · Only tag resources <em>directly used</em> by your partner solution<br>
+    · Revenue is attributed until the tag is removed or the resource is shut down`
+  },
+  11: {
+    tag: 'success', label: 'Success',
+    title: 'Revenue attribution active — AWS reports to Partner Central',
+    body: `Once the tags are detected, AWS begins attributing the consumption of those resources to your Marketplace product listing.
+    <br><br>
+    <strong>What AWS provides back:</strong><br>
+    · Aggregated consumption data visible in Partner Central<br>
+    · Revenue impact reporting linked to your product code<br>
+    · Data to support Go-to-Market funding and feature requests
+    <br><br>
+    <strong>Ongoing:</strong> Attribution continues as long as the tag remains. If the customer unsubscribes (<code>unsubscribe-success</code>), remove the tag and shut down resources per your retention policy.`
+  }
+};
+
+let active = null;
+
+function show(n) {
+  // Deactivate previous
+  if (active !== null) {
+    document.querySelectorAll(`[data-step="${active}"]`).forEach(el => el.classList.remove('active'));
+  }
+
+  // Activate clicked
+  document.querySelectorAll(`[data-step="${n}"]`).forEach(el => el.classList.add('active'));
+  active = n;
+
+  const s = steps[n];
+  const panel = document.getElementById('detail-panel');
+  panel.classList.remove('empty');
+
+  panel.innerHTML = `
+    <span class="detail-tag tag-${s.tag}">${s.label}</span>
+    <div id="detail-title">${s.title}</div>
+    <div id="detail-body">${s.body}</div>
+  `;
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+</script>
+</body>
+</html>
