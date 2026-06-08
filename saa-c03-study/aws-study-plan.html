@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS SAA Study Plan — Jun 8–22</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #e8eaf0;
+    --text2: #8b90a8;
+    --text3: #555a72;
+    --green: #1D9E75;
+    --green-dim: rgba(29,158,117,0.15);
+    --green-text: #4ecda4;
+    --purple: #7f77dd;
+    --purple-dim: rgba(127,119,221,0.15);
+    --purple-text: #a89ff0;
+    --amber: #ef9f27;
+    --amber-dim: rgba(239,159,39,0.15);
+    --amber-text: #f5c16a;
+    --blue: #378add;
+    --blue-dim: rgba(55,138,221,0.15);
+    --blue-text: #7ab8f0;
+    --coral: #d85a30;
+    --coral-dim: rgba(216,90,48,0.15);
+    --coral-text: #f0997b;
+    --gray-dim: rgba(136,135,128,0.15);
+    --gray-text: #b4b2a9;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+  }
+
+  .title-block h1 {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .title-block p {
+    font-size: 13px;
+    color: var(--text2);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .exam-badge {
+    background: var(--blue-dim);
+    color: var(--blue-text);
+    border: 0.5px solid rgba(55,138,221,0.3);
+    border-radius: var(--radius-sm);
+    padding: 6px 14px;
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    white-space: nowrap;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .exam-badge strong {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--blue-text);
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 1rem;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+
+  .stat-val {
+    font-size: 24px;
+    font-weight: 500;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--text);
+  }
+
+  .stat-val.green { color: var(--green-text); }
+
+  .prog-track {
+    background: var(--surface2);
+    border-radius: 99px;
+    height: 4px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+
+  .prog-fill {
+    height: 4px;
+    background: var(--green);
+    border-radius: 99px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  .prog-label {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    padding: 0.75rem 1rem;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+  }
+
+  .leg-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text2);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .leg-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .week-section { margin-bottom: 2rem; }
+
+  .week-header {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .days-grid {
+    display: grid;
+    gap: 10px;
+  }
+
+  .grid-1 { grid-template-columns: 1fr; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-5 { grid-template-columns: repeat(5, 1fr); }
+
+  .day-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.875rem;
+  }
+
+  .day-card.is-weekend { border-left: 2px solid var(--green); }
+  .day-card.is-exam    { border-left: 2px solid var(--blue); }
+
+  .day-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+
+  .day-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .day-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+  }
+
+  .day-theme {
+    font-size: 11px;
+    color: var(--text2);
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .day-progress {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+
+  .task {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 0;
+    border-bottom: 0.5px solid var(--border);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.1s;
+  }
+
+  .task:last-child { border-bottom: none; }
+
+  .task:hover {
+    background: var(--surface2);
+    margin: 0 -4px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .task.done .task-text {
+    color: var(--green-text);
+    text-decoration: line-through;
+    text-decoration-color: rgba(29,158,117,0.5);
+  }
+
+  .chk {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    border: 1px solid var(--border2);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    transition: all 0.15s;
+  }
+
+  .task.done .chk {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .chk svg { opacity: 0; }
+  .task.done .chk svg { opacity: 1; }
+
+  .task-text {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.45;
+    flex: 1;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 1px 7px;
+    border-radius: 99px;
+    margin-left: auto;
+    flex-shrink: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    white-space: nowrap;
+  }
+
+  .badge-video   { background: var(--coral-dim);  color: var(--coral-text); }
+  .badge-td      { background: var(--purple-dim); color: var(--purple-text); }
+  .badge-review  { background: var(--amber-dim);  color: var(--amber-text); }
+  .badge-exam    { background: var(--blue-dim);   color: var(--blue-text); }
+  .badge-golf    { background: var(--green-dim);  color: var(--green-text); }
+  .badge-cantril { background: var(--gray-dim);   color: var(--gray-text); }
+  .badge-notes   { background: var(--amber-dim);  color: var(--amber-text); }
+
+  .rule-box {
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem 2rem;
+  }
+
+  .rule {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    padding: 4px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .rule:last-child, .rule:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+
+  .rule span { color: var(--green-text); }
+
+  @media (max-width: 800px) {
+    .grid-5 { grid-template-columns: repeat(2, 1fr); }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .rule-box { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 500px) {
+    .grid-2, .grid-3, .grid-4, .grid-5 { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .header-top { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-top">
+      <div class="title-block">
+        <h1>AWS SAA-C03 Study Plan</h1>
+        <p>Jun 8 (Mon) → Jun 22 (Sun) · TD videos primary · 2-week sprint</p>
+      </div>
+      <div class="exam-badge">
+        <strong>Target: Jun 22</strong>
+        AWS Solutions Architect Associate
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-label">Completed</div><div class="stat-val" id="s-done">0</div></div>
+      <div class="stat-card"><div class="stat-label">Remaining</div><div class="stat-val" id="s-rem">0</div></div>
+      <div class="stat-card"><div class="stat-label">Progress</div><div class="stat-val" id="s-pct">0%</div></div>
+      <div class="stat-card"><div class="stat-label">Score target</div><div class="stat-val green">75%+</div></div>
+    </div>
+
+    <div class="prog-track"><div class="prog-fill" id="prog"></div></div>
+    <div class="prog-label" id="prog-lbl">Click any task to mark it done — progress saves in this browser</div>
+  </div>
+
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot" style="background:#f0997b"></div>TD video (elliptical, 1.25x)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#a89ff0"></div>TD quiz (next morning, desk — cold recall)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#7ab8f0"></div>Full timed exam (65q)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#f5c16a"></div>Wrong answer review</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#b4b2a9"></div>Cantrill (reference only)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#4ecda4"></div>Golf — earned it</div>
+  </div>
+
+  <div id="plan"></div>
+
+  <div class="rule-box">
+    <div class="rule"><span>Rule 1:</span> Watch TD video today → quiz it tomorrow cold. Never same day.</div>
+    <div class="rule"><span>Rule 2:</span> Annotate cheat sheet while watching — circle, highlight, 2 words max.</div>
+    <div class="rule"><span>Rule 3:</span> Wrong answer review is the actual studying. Never skip it.</div>
+    <div class="rule"><span>Rule 4:</span> TD full exam ≥ 80% → book the exam immediately, don't wait.</div>
+    <div class="rule"><span>Rule 5:</span> Cantrill only when TD explanation doesn't click. Reference, not primary.</div>
+    <div class="rule"><span>Rule 6:</span> The plan is built. Execute it. Stop optimizing it.</div>
+  </div>
+
+</div>
+
+<script>
+const plan = [
+  {
+    label: "Week 1 — Mon Jun 9 through Fri Jun 13",
+    note: "TD video on elliptical each morning · quiz previous day's topic cold at desk · annotate cheat sheet while watching",
+    grid: "grid-5",
+    days: [
+      { name: "Mon", date: "Jun 9", theme: "IAM & identity", tasks: [
+        { id:"d1t1", text:"TD video: IAM — users, groups, roles, policies (elliptical, 1.25x)", badge:"badge-video", bl:"TD video" },
+        { id:"d1t2", text:"TD video: STS, cross-account, permission boundaries (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d1t3", text:"Annotate IAM cheat sheet while watching — circle, highlight", badge:"badge-notes", bl:"Annotate" },
+        { id:"d1t4", text:"Notes only — no quiz today, let it sit overnight", badge:"badge-notes", bl:"Notes" },
+      ]},
+      { name: "Tue", date: "Jun 10", theme: "Compute — quiz IAM first", tasks: [
+        { id:"d2t1", text:"TD quiz: IAM topic test — cold recall at desk, first thing", badge:"badge-td", bl:"TD quiz" },
+        { id:"d2t2", text:"Review every explanation — right and wrong, cross-ref cheat sheet", badge:"badge-review", bl:"Review" },
+        { id:"d2t3", text:"TD video: EC2 types, purchasing options, AMIs, ASG (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d2t4", text:"TD video: Lambda, ECS/EKS/Fargate (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d2t5", text:"Annotate compute cheat sheet while watching", badge:"badge-notes", bl:"Annotate" },
+      ]},
+      { name: "Wed", date: "Jun 11", theme: "Storage — quiz compute first", tasks: [
+        { id:"d3t1", text:"TD quiz: EC2 + compute — cold recall at desk", badge:"badge-td", bl:"TD quiz" },
+        { id:"d3t2", text:"Review every explanation, cross-ref cheat sheet", badge:"badge-review", bl:"Review" },
+        { id:"d3t3", text:"TD video: S3 storage classes, lifecycle, replication, security (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d3t4", text:"TD video: EBS types, EFS, FSx (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d3t5", text:"Annotate storage cheat sheet while watching", badge:"badge-notes", bl:"Annotate" },
+      ]},
+      { name: "Thu", date: "Jun 12", theme: "Networking — quiz storage first", tasks: [
+        { id:"d4t1", text:"TD quiz: S3 + storage — cold recall at desk", badge:"badge-td", bl:"TD quiz" },
+        { id:"d4t2", text:"Review every explanation, cross-ref cheat sheet", badge:"badge-review", bl:"Review" },
+        { id:"d4t3", text:"TD video: VPC, subnets, IGW, NAT, SGs vs NACLs (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d4t4", text:"TD video: VPC endpoints, PrivateLink, peering (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d4t5", text:"Annotate VPC cheat sheet while watching", badge:"badge-notes", bl:"Annotate" },
+      ]},
+      { name: "Fri", date: "Jun 13", theme: "Databases — quiz VPC first", tasks: [
+        { id:"d5t1", text:"TD quiz: VPC + networking — cold recall at desk", badge:"badge-td", bl:"TD quiz" },
+        { id:"d5t2", text:"Review every explanation, cross-ref cheat sheet", badge:"badge-review", bl:"Review" },
+        { id:"d5t3", text:"TD video: RDS, Aurora, DynamoDB, ElastiCache (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d5t4", text:"TD video: Redshift, Neptune, DocumentDB (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d5t5", text:"Annotate databases cheat sheet while watching", badge:"badge-notes", bl:"Annotate" },
+      ]},
+    ]
+  },
+  {
+    label: "Weekend 1 — Sat Jun 14 + Sun Jun 15",
+    grid: "grid-2",
+    days: [
+      { name: "Sat", date: "Jun 14", theme: "HA/DR + messaging — quiz databases first", cls:"is-weekend", tasks: [
+        { id:"d6t1", text:"TD quiz: Databases — cold recall at desk", badge:"badge-td", bl:"TD quiz" },
+        { id:"d6t2", text:"Review every explanation, cross-ref cheat sheet", badge:"badge-review", bl:"Review" },
+        { id:"d6t3", text:"TD video: ALB/NLB, Route 53, CloudFront, DR strategies (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d6t4", text:"TD video: SQS, SNS, EventBridge, Kinesis (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d6t5", text:"Annotate HA/DR + messaging cheat sheets while watching", badge:"badge-notes", bl:"Annotate" },
+        { id:"d6t6", text:"Golf — earned it", badge:"badge-golf", bl:"Golf" },
+      ]},
+      { name: "Sun", date: "Jun 15", theme: "Security — quiz HA/DR first", cls:"is-weekend", tasks: [
+        { id:"d7t1", text:"TD quiz: HA/DR + messaging — cold recall at desk", badge:"badge-td", bl:"TD quiz" },
+        { id:"d7t2", text:"Review every explanation, cross-ref cheat sheet", badge:"badge-review", bl:"Review" },
+        { id:"d7t3", text:"TD video: KMS, Secrets Manager, WAF, GuardDuty (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d7t4", text:"TD video: CloudTrail, Config, Security Hub (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d7t5", text:"Annotate security cheat sheet while watching", badge:"badge-notes", bl:"Annotate" },
+      ]},
+    ]
+  },
+  {
+    label: "Week 2 — Mon Jun 16 through Fri Jun 20",
+    note: "Full timed exams start this week · wrong answer review is non-negotiable · Cantrill only for persistent gaps",
+    grid: "grid-5",
+    days: [
+      { name: "Mon", date: "Jun 16", theme: "Adv networking — quiz security first", tasks: [
+        { id:"d8t1", text:"TD quiz: Security — cold recall at desk", badge:"badge-td", bl:"TD quiz" },
+        { id:"d8t2", text:"Review every explanation, cross-ref cheat sheet", badge:"badge-review", bl:"Review" },
+        { id:"d8t3", text:"TD video: Transit Gateway, Direct Connect, Global Accelerator (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d8t4", text:"TD video: CloudFormation, Systems Manager, CloudWatch (elliptical)", badge:"badge-video", bl:"TD video" },
+        { id:"d8t5", text:"Annotate adv networking + ops cheat sheets", badge:"badge-notes", bl:"Annotate" },
+      ]},
+      { name: "Tue", date: "Jun 17", theme: "First full exam — quiz adv networking first", tasks: [
+        { id:"d9t1", text:"TD quiz: Adv networking + ops — cold recall at desk", badge:"badge-td", bl:"TD quiz" },
+        { id:"d9t2", text:"Review every explanation, cross-ref cheat sheet", badge:"badge-review", bl:"Review" },
+        { id:"d9t3", text:"TD: First full timed 65-question exam", badge:"badge-exam", bl:"Full exam" },
+        { id:"d9t4", text:"Deep-dive every wrong answer — note weak domains by score", badge:"badge-review", bl:"Review" },
+      ]},
+      { name: "Wed", date: "Jun 18", theme: "Weak spot day + full exam #2", tasks: [
+        { id:"d10t1", text:"Rewatch TD video on lowest-scoring domain from exam #1", badge:"badge-video", bl:"TD video" },
+        { id:"d10t2", text:"TD: Topic quiz on weakest 1-2 domains only", badge:"badge-td", bl:"TD quiz" },
+        { id:"d10t3", text:"TD: Full timed exam #2", badge:"badge-exam", bl:"Full exam" },
+        { id:"d10t4", text:"Review wrong answers — pattern spotting now", badge:"badge-review", bl:"Review" },
+      ]},
+      { name: "Thu", date: "Jun 19", theme: "Random mode + full exam #3", tasks: [
+        { id:"d11t1", text:"Skim Well-Architected whitepaper — 6 pillars, 30 min max", badge:"badge-notes", bl:"Whitepaper" },
+        { id:"d11t2", text:"TD: Random mode — 40 questions untimed", badge:"badge-td", bl:"TD quiz" },
+        { id:"d11t3", text:"TD: Full timed exam #3", badge:"badge-exam", bl:"Full exam" },
+        { id:"d11t4", text:"Review wrong answers — should be under 20% misses by now", badge:"badge-review", bl:"Review" },
+      ]},
+      { name: "Fri", date: "Jun 20", theme: "Light day — rest and lock in", tasks: [
+        { id:"d12t1", text:"TD: Random mode — 20 questions only, no pressure", badge:"badge-td", bl:"TD quiz" },
+        { id:"d12t2", text:"Skim annotated cheat sheets — your notes, not new material", badge:"badge-review", bl:"Review" },
+        { id:"d12t3", text:"Confirm exam booking — early morning Sun slot", badge:"badge-exam", bl:"Admin" },
+        { id:"d12t4", text:"Sleep 7+ hours tonight — seriously", badge:"badge-notes", bl:"Rest" },
+      ]},
+    ]
+  },
+  {
+    label: "Exam weekend — Sat Jun 21 + Sun Jun 22",
+    grid: "grid-2",
+    days: [
+      { name: "Sat", date: "Jun 21", theme: "Final mock + clear your head", cls:"is-exam", tasks: [
+        { id:"d13t1", text:"TD: Final full timed exam #4 — target 80%+", badge:"badge-exam", bl:"Full exam" },
+        { id:"d13t2", text:"Review wrong answers one last time", badge:"badge-review", bl:"Review" },
+        { id:"d13t3", text:"Done by noon — golf afternoon, no studying after 5pm", badge:"badge-golf", bl:"Golf" },
+        { id:"d13t4", text:"Let it consolidate — no cramming tonight", badge:"badge-notes", bl:"Rest" },
+      ]},
+      { name: "Sun", date: "Jun 22", theme: "EXAM DAY", cls:"is-exam", tasks: [
+        { id:"d14t1", text:"Wake up normal time — no cramming, trust the work", badge:"badge-notes", bl:"Morning" },
+        { id:"d14t2", text:"Skim annotated cheat sheet notes — 20 min max", badge:"badge-review", bl:"Light review" },
+        { id:"d14t3", text:"Sit the AWS SAA-C03 exam — you are ready", badge:"badge-exam", bl:"EXAM" },
+        { id:"d14t4", text:"Golf to celebrate the pass", badge:"badge-golf", bl:"Golf" },
+      ]},
+    ]
+  }
+];
+
+let checked = {};
+try { checked = JSON.parse(localStorage.getItem('aws_saa_jun8') || '{}'); } catch(e) {}
+
+function allIds() {
+  return plan.flatMap(w => w.days.flatMap(d => d.tasks.map(t => t.id)));
+}
+
+function updateStats() {
+  const all = allIds();
+  const done = all.filter(id => checked[id]).length;
+  const pct = all.length ? Math.round(done / all.length * 100) : 0;
+  document.getElementById('s-done').textContent = done;
+  document.getElementById('s-rem').textContent = all.length - done;
+  document.getElementById('s-pct').textContent = pct + '%';
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('prog-lbl').textContent =
+    pct === 100 ? '✓ All done — go sit that exam!' :
+    pct === 0   ? 'Click any task to mark it done — progress saves in this browser' :
+    done + ' of ' + all.length + ' tasks completed';
+}
+
+function toggle(id, dayTasks, dpId) {
+  checked[id] = !checked[id];
+  try { localStorage.setItem('aws_saa_jun8', JSON.stringify(checked)); } catch(e) {}
+  document.getElementById('r-' + id).classList.toggle('done', checked[id]);
+  const dc = dayTasks.filter(t => checked[t.id]).length;
+  const dp = document.getElementById(dpId);
+  if (dp) dp.textContent = dc + '/' + dayTasks.length + ' done';
+  updateStats();
+}
+
+const root = document.getElementById('plan');
+
+plan.forEach(week => {
+  const section = document.createElement('div');
+  section.className = 'week-section';
+
+  const hdr = document.createElement('div');
+  hdr.className = 'week-header';
+  hdr.textContent = week.label;
+  section.appendChild(hdr);
+
+  if (week.note) {
+    const note = document.createElement('div');
+    note.style.cssText = 'font-size:11px;color:var(--text3);font-family:"IBM Plex Mono",monospace;margin-bottom:0.75rem;';
+    note.textContent = '↳ ' + week.note;
+    section.appendChild(note);
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'days-grid ' + week.grid;
+
+  week.days.forEach(day => {
+    const card = document.createElement('div');
+    card.className = 'day-card' + (day.cls ? ' ' + day.cls : '');
+
+    const dpId = 'dp-' + day.tasks[0].id;
+    const doneCt = day.tasks.filter(t => checked[t.id]).length;
+
+    card.innerHTML = `
+      <div class="day-head">
+        <span class="day-name">${day.name}</span>
+        <span class="day-date">${day.date}</span>
+      </div>
+      <div class="day-theme">${day.theme}</div>
+      <div class="day-progress" id="${dpId}">${doneCt}/${day.tasks.length} done</div>
+    `;
+
+    day.tasks.forEach(t => {
+      const row = document.createElement('div');
+      row.className = 'task' + (checked[t.id] ? ' done' : '');
+      row.id = 'r-' + t.id;
+      row.innerHTML = `
+        <div class="chk">
+          <svg width="8" height="8" viewBox="0 0 8 8" fill="none">
+            <polyline points="1,4 3,6.5 7,1.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="task-text">${t.text}</span>
+        <span class="badge ${t.badge}">${t.bl}</span>
+      `;
+      row.addEventListener('click', () => toggle(t.id, day.tasks, dpId));
+      card.appendChild(row);
+    });
+
+    grid.appendChild(card);
+  });
+
+  section.appendChild(grid);
+  root.appendChild(section);
+});
+
+updateStats();
+</script>
+</body>
+</html>
