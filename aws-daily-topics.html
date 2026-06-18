@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS SAA — Daily Topic Schedule</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;
+    --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+    --text:#e8eaf0;--text2:#8b90a8;--text3:#555a72;
+    --green:#1D9E75;--green-dim:rgba(29,158,117,0.15);--green-text:#4ecda4;
+    --purple-dim:rgba(127,119,221,0.15);--purple-text:#a89ff0;
+    --amber-dim:rgba(239,159,39,0.15);--amber-text:#f5c16a;
+    --blue:#378add;--blue-dim:rgba(55,138,221,0.15);--blue-text:#7ab8f0;
+    --coral-dim:rgba(216,90,48,0.15);--coral-text:#f0997b;
+    --gray-dim:rgba(136,135,128,0.15);--gray-text:#b4b2a9;
+    --red-dim:rgba(220,60,60,0.15);--red-text:#f07a7a;
+    --radius:10px;--radius-sm:6px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.5;min-height:100vh;}
+  .page{max-width:860px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+
+  /* HEADER */
+  h1{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:500;margin-bottom:4px;}
+  .sub{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text2);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:0.5px solid var(--border);}
+
+  /* PROGRESS */
+  .prog-row{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;}
+  .prog-track{flex:1;background:var(--surface2);border-radius:99px;height:4px;overflow:hidden;}
+  .prog-fill{height:4px;background:var(--green);border-radius:99px;transition:width 0.4s;}
+  .prog-txt{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);white-space:nowrap;}
+
+  /* TODAY BANNER */
+  .today-banner{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
+  .today-dot{width:10px;height:10px;border-radius:50%;background:var(--blue);flex-shrink:0;}
+  .today-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;}
+  .today-topic{font-size:15px;font-weight:500;color:var(--text);}
+  .today-section{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--blue-text);}
+  .today-right{margin-left:auto;text-align:right;}
+  .today-date{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--text2);}
+  .today-exam{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--amber-text);margin-top:2px;}
+
+  /* DAY NAVIGATION */
+  .day-nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;}
+  .day-pill{padding:5px 12px;border-radius:99px;font-family:'IBM Plex Mono',monospace;font-size:11px;cursor:pointer;border:0.5px solid var(--border);color:var(--text2);background:var(--surface);transition:all 0.15s;user-select:none;}
+  .day-pill:hover{border-color:var(--border2);color:var(--text);}
+  .day-pill.active{background:var(--blue-dim);border-color:rgba(55,138,221,0.4);color:var(--blue-text);}
+  .day-pill.is-today{border-color:rgba(55,138,221,0.6);color:var(--blue-text);}
+  .day-pill.is-weekend{border-color:rgba(29,158,117,0.4);color:var(--green-text);}
+  .day-pill.is-exam{border-color:rgba(55,138,221,0.6);color:var(--blue-text);}
+  .day-pill.done-all{background:var(--green-dim);border-color:rgba(29,158,117,0.4);color:var(--green-text);}
+
+  /* DAY PANEL */
+  .day-panel{display:none;}
+  .day-panel.active{display:block;}
+  .day-header{margin-bottom:1.25rem;}
+  .day-title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:0.5rem;flex-wrap:wrap;}
+  .day-title{font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:500;}
+  .day-subtitle{font-size:13px;color:var(--text2);margin-bottom:4px;}
+  .day-section-badge{font-family:'IBM Plex Mono',monospace;font-size:11px;background:var(--blue-dim);color:var(--blue-text);border:0.5px solid rgba(55,138,221,0.25);border-radius:99px;padding:2px 10px;display:inline-block;margin-bottom:0.75rem;}
+  .day-meta{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);}
+  .day-progress-txt{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);text-align:right;}
+
+  /* TIMELINE */
+  .timeline{display:flex;flex-direction:column;gap:0;}
+  .tl-block{display:flex;gap:0;position:relative;}
+  .tl-time-col{width:80px;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;padding-right:12px;padding-top:12px;}
+  .tl-time{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);line-height:1.2;}
+  .tl-dur{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);opacity:0.55;margin-top:2px;}
+  .tl-connector{width:20px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;}
+  .tl-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:14px;z-index:1;}
+  .tl-line{width:2px;flex:1;background:var(--border);margin-top:2px;}
+  .tl-block:last-child .tl-line{display:none;}
+  .tl-card{flex:1;margin:6px 0 6px 12px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;cursor:pointer;transition:all 0.15s;}
+  .tl-card:hover{border-color:var(--border2);}
+  .tl-card.done{background:rgba(29,158,117,0.07);border-color:rgba(29,158,117,0.2);}
+  .tl-card.is-break{background:transparent;border-style:dashed;cursor:default;}
+  .tl-card.is-break:hover{border-color:var(--border);}
+  .tl-card-head{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+  .tl-label{font-size:13px;font-weight:500;color:var(--text);}
+  .tl-card.done .tl-label{color:var(--green-text);}
+  .tl-card.is-break .tl-label{color:var(--text3);font-weight:400;}
+  .tl-badge{font-size:10px;padding:1px 7px;border-radius:99px;margin-left:auto;font-family:'IBM Plex Mono',monospace;white-space:nowrap;flex-shrink:0;}
+  .badge-video{background:var(--coral-dim);color:var(--coral-text);}
+  .badge-quiz{background:var(--purple-dim);color:var(--purple-text);}
+  .badge-review{background:var(--amber-dim);color:var(--amber-text);}
+  .badge-exam{background:var(--blue-dim);color:var(--blue-text);}
+  .badge-golf{background:var(--green-dim);color:var(--green-text);}
+  .badge-vs{background:var(--gray-dim);color:var(--gray-text);}
+  .badge-break{background:var(--gray-dim);color:var(--gray-text);}
+  .tl-topic{font-size:12px;color:var(--text2);line-height:1.4;margin-bottom:4px;}
+  .tl-card.done .tl-topic{color:var(--green-text);opacity:0.7;text-decoration:line-through;text-decoration-color:rgba(29,158,117,0.4);}
+  .tl-card.is-break .tl-topic{color:var(--text3);}
+  .tl-detail{font-size:11px;color:var(--text3);line-height:1.4;font-style:italic;}
+
+  /* RULES */
+  .rules{margin-top:2rem;padding:1rem 1.25rem;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-sm);display:grid;grid-template-columns:1fr 1fr;gap:0.4rem 2rem;}
+  .rule{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text3);padding:3px 0;border-bottom:0.5px solid var(--border);}
+  .rule:last-child{border-bottom:none;}
+  .rule span{color:var(--green-text);}
+
+  @media(max-width:600px){.rules{grid-template-columns:1fr;}.tl-time-col{width:60px;}.today-banner{flex-direction:column;gap:0.5rem;}.today-right{margin-left:0;text-align:left;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>AWS SAA — Daily Topic Schedule</h1>
+<div class="sub">Jun 9 → Jun 22 · Follows TD course order · 4–5 hrs/day · Click any block to check it off</div>
+
+<div class="prog-row">
+  <div class="prog-track"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+  <div class="prog-txt" id="prog-txt">0 / 0 blocks done</div>
+</div>
+
+<div class="today-banner" id="today-banner"></div>
+<div class="day-nav" id="day-nav"></div>
+<div id="day-panels"></div>
+
+<div class="rules">
+  <div class="rule"><span>Rule 1:</span> Watch TD video today → quiz tomorrow cold. Never same day.</div>
+  <div class="rule"><span>Rule 2:</span> Annotate cheat sheet while watching — circle, 2 words max.</div>
+  <div class="rule"><span>Rule 3:</span> Wrong answer review is the actual studying. Never skip it.</div>
+  <div class="rule"><span>Rule 4:</span> TD exam ≥ 80% → book the real exam immediately.</div>
+  <div class="rule"><span>Rule 5:</span> S22 Versus section on Thu Jun 19 — do not skip, exam gold.</div>
+  <div class="rule"><span>Rule 6:</span> The plan is built. Execute. Stop optimizing.</div>
+</div>
+
+</div>
+<script>
+const DOT={video:'#f0997b',quiz:'#a89ff0',review:'#f5c16a',exam:'#7ab8f0',golf:'#4ecda4',vs:'#b4b2a9',break:'#555a72'};
+
+const DAYS=[
+  {
+    id:'jun9',name:'Mon Jun 9',short:'Mon 6/9',topic:'IAM & Identity',section:'TD Section 5',
+    type:'weekday',examWeek:false,
+    blocks:[
+      {id:'j9b1',time:'5:00 AM',dur:'60 min',label:'Elliptical — TD S5 Video Block 1',badge:'video',
+       topic:'IAM Overview · IAM Identities · IAM Policy Types · IAM Policy Basics',
+       detail:'1.25x speed · cheat sheet open · circle and annotate as you watch'},
+      {id:'j9b2',time:'6:00 AM',dur:'30 min',label:'Elliptical — TD S5 Video Block 2',badge:'video',
+       topic:'IAM Policy Evaluation Logic · IAM Access Analyzer · IAM Identity Center demo',
+       detail:'Complete the full S5 section · annotate anything not on cheat sheet'},
+      {id:'j9b3',time:'6:30 AM',dur:'20 min',label:'Notes only — no quiz today',badge:'review',
+       topic:'Let IAM sit overnight — cold recall works better after a sleep cycle',
+       detail:'Skim your annotations · add any missed terms · then done'},
+      {id:'j9b4',time:'5:00 PM',dur:'30 min',label:'Evening — TD S5 IAM Quiz preview',badge:'review',
+       topic:'Skim the IAM cheat sheet annotations you made this morning',
+       detail:'Not a quiz — just refreshing what you marked. Quiz is tomorrow morning cold.'},
+      {id:'j9b5',time:'Eve',dur:'—',label:'Golf / decompress',badge:'golf',topic:'Non-negotiable. Physical activity improves retention.',detail:'',isBreak:true},
+    ]
+  },
+  {
+    id:'jun10',name:'Tue Jun 10',short:'Tue 6/10',topic:'VPC & Networking',section:'TD Section 6',
+    type:'weekday',examWeek:false,
+    blocks:[
+      {id:'j10b1',time:'5:00 AM',dur:'45 min',label:'Cold Recall — TD S5 IAM Quiz',badge:'quiz',
+       topic:'IAM topic quiz at desk — first thing, no notes beforehand',
+       detail:'If score <75% flag IAM in domain tracker and note weak spots'},
+      {id:'j10b2',time:'5:45 AM',dur:'45 min',label:'Wrong Answer Review — IAM',badge:'review',
+       topic:'Every explanation — right and wrong · cross-ref IAM cheat sheet',
+       detail:'Add margin notes on anything that tripped you · update domain tracker'},
+      {id:'j10b3',time:'6:30 AM',dur:'60 min',label:'Elliptical — TD S6 Video Block 1',badge:'video',
+       topic:'VPC Overview · Anatomy of a VPC · VPC Network Architectures',
+       detail:'Annotate VPC cheat sheet while watching · circle CIDR, subnets, IGW, NAT'},
+      {id:'j10b4',time:'5:00 PM',dur:'45 min',label:'Desk — TD S6 Video Block 2',badge:'video',
+       topic:'VPC Peering Longest Prefix Match · Security Groups vs NACLs · VPC Endpoints · PrivateLink',
+       detail:'Complete S6 · annotate comparison between SG and NACL — always on exam'},
+      {id:'j10b5',time:'5:45 PM',dur:'20 min',label:'Skim VPC annotations',badge:'review',
+       topic:'Quick pass through your VPC cheat sheet marks — not a quiz',detail:''},
+      {id:'j10b6',time:'Eve',dur:'—',label:'Golf / decompress',badge:'golf',topic:'Done for the day.',detail:'',isBreak:true},
+    ]
+  },
+  {
+    id:'jun11',name:'Wed Jun 11',short:'Wed 6/11',topic:'EC2 + Auto Scaling',section:'TD Sections 7–8',
+    type:'weekday',examWeek:false,
+    blocks:[
+      {id:'j11b1',time:'5:00 AM',dur:'45 min',label:'Cold Recall — TD S6 VPC Quiz',badge:'quiz',
+       topic:'VPC topic quiz at desk — cold recall, no notes',
+       detail:'If <75% flag VPC in domain tracker'},
+      {id:'j11b2',time:'5:45 AM',dur:'45 min',label:'Wrong Answer Review — VPC',badge:'review',
+       topic:'Every explanation · cross-ref VPC cheat sheet · note SG vs NACL gotchas',detail:''},
+      {id:'j11b3',time:'6:30 AM',dur:'60 min',label:'Elliptical — TD S7 Video Block 1',badge:'video',
+       topic:'EC2 Overview · Purchasing Options · On-Demand · Capacity Reservation · Dedicated Hosts · Savings Plans',
+       detail:'Annotate EC2 cheat sheet — purchasing options are heavily tested'},
+      {id:'j11b4',time:'5:00 PM',dur:'60 min',label:'Desk — TD S7 Video Block 2 + S8',badge:'video',
+       topic:'S7: EC2 Instance Types · AMI · Instance Metadata · Image Builder · EC2 Networking · EC2 Network Security | S8: Auto Scaling Overview · ASG Types · Lifecycle Hooks',
+       detail:'S7 and S8 are related — batch them · annotate ASG lifecycle hook diagram'},
+      {id:'j11b5',time:'6:00 PM',dur:'20 min',label:'Skim EC2 + ASG annotations',badge:'review',
+       topic:'Quick pass through EC2 and ASG cheat sheet marks',detail:''},
+      {id:'j11b6',time:'Eve',dur:'—',label:'Golf / decompress',badge:'golf',topic:'Done.',detail:'',isBreak:true},
+    ]
+  },
+  {
+    id:'jun12',name:'Thu Jun 12',short:'Thu 6/12',topic:'EBS + ELB',section:'TD Sections 9–10',
+    type:'weekday',examWeek:false,
+    blocks:[
+      {id:'j12b1',time:'5:00 AM',dur:'45 min',label:'Cold Recall — TD S7–S8 EC2 + ASG Quiz',badge:'quiz',
+       topic:'EC2 + Auto Scaling topic quiz — cold recall, no notes',
+       detail:'EC2 purchasing options and ASG scaling policies are common traps'},
+      {id:'j12b2',time:'5:45 AM',dur:'45 min',label:'Wrong Answer Review — EC2 + ASG',badge:'review',
+       topic:'Every explanation · cross-ref EC2 cheat sheet · note purchasing option differences',detail:''},
+      {id:'j12b3',time:'6:30 AM',dur:'45 min',label:'Elliptical — TD S9 EBS Video',badge:'video',
+       topic:'EBS Overview · EBS Types (gp2 vs gp3 vs io1 vs io2 vs st1 vs sc1) · Snapshots · Encryption · Multi-Attach',
+       detail:'Annotate EBS cheat sheet · gp3 vs io2 comparison is a frequent exam question'},
+      {id:'j12b4',time:'5:00 PM',dur:'45 min',label:'Desk — TD S10 ELB Video',badge:'video',
+       topic:'ELB Overview · ALB vs NLB vs CLB · Target Groups · Sticky Sessions · Connection Draining',
+       detail:'Annotate ELB cheat sheet · ALB=L7 content routing · NLB=L4 static IP · classic exam trap'},
+      {id:'j12b5',time:'5:45 PM',dur:'20 min',label:'Skim EBS + ELB annotations',badge:'review',
+       topic:'Quick pass through EBS and ELB cheat sheet marks',detail:''},
+      {id:'j12b6',time:'Eve',dur:'—',label:'Golf / decompress',badge:'golf',topic:'Done.',detail:'',isBreak:true},
+    ]
+  },
+  {
+    id:'jun13',name:'Fri Jun 13',short:'Fri 6/13',topic:'S3',section:'TD Section 11',
+    type:'weekday',examWeek:false,
+    blocks:[
+      {id:'j13b1',time:'5:00 AM',dur:'45 min',label:'Cold Recall — TD S9–S10 EBS + ELB Quiz',badge:'quiz',
+       topic:'EBS + ELB topic quiz — cold recall, no notes',
+       detail:'EBS volume type use cases and ALB vs NLB distinction are heavily tested'},
+      {id:'j13b2',time:'5:45 AM',dur:'45 min',label:'Wrong Answer Review — EBS + ELB',badge:'review',
+       topic:'Every explanation · cross-ref EBS and ELB cheat sheets',detail:''},
+      {id:'j13b3',time:'6:30 AM',dur:'60 min',label:'Elliptical — TD S11 S3 Video Block 1',badge:'video',
+       topic:'S3 Overview · Storage Classes (S3 Standard, IA, One Zone-IA, Glacier Instant, Flexible, Deep Archive, Intelligent-Tiering) · Minimum Storage Duration',
+       detail:'Annotate S3 cheat sheet · storage class transitions and minimum durations on exam'},
+      {id:'j13b4',time:'5:00 PM',dur:'45 min',label:'Desk — TD S11 S3 Video Block 2',badge:'video',
+       topic:'S3 Event Notifications · Presigned URLs · S3 Select · Object Lock · Bucket Policies · Block Public Access',
+       detail:'Complete S3 section · annotate security features — S3 public access and bucket policy traps'},
+      {id:'j13b5',time:'5:45 PM',dur:'20 min',label:'Skim S3 annotations',badge:'review',
+       topic:'Quick pass through S3 cheat sheet marks · storage classes are worth extra time',detail:''},
+      {id:'j13b6',time:'Eve',dur:'—',label:'Golf / decompress',badge:'golf',topic:'Done for the week.',detail:'',isBreak:true},
+    ]
+  },
+  {
+    id:'jun14',name:'Sat Jun 14',short:'Sat 6/14',topic:'RDS + DynamoDB',section:'TD Sections 12–13',
+    type:'weekend',examWeek:false,
+    blocks:[
+      {id:'j14b1',time:'5:00 AM',dur:'45 min',label:'Cold Recall — TD S11 S3 Quiz',badge:'quiz',
+       topic:'S3 topic quiz — cold recall, no notes · S3 storage classes are always tested',
+       detail:'If <75% flag S3 in domain tracker'},
+      {id:'j14b2',time:'5:45 AM',dur:'45 min',label:'Wrong Answer Review — S3',badge:'review',
+       topic:'Every explanation · cross-ref S3 cheat sheet · note storage class transitions',detail:''},
+      {id:'j14b3',time:'6:30 AM',dur:'60 min',label:'Elliptical — TD S12 RDS Video',badge:'video',
+       topic:'RDS Overview · Read Replicas · Multi-AZ Deployments · RDS Proxy · Aurora Overview · Aurora Serverless',
+       detail:'Annotate RDS cheat sheet · Multi-AZ vs Read Replica distinction is a classic exam trap'},
+      {id:'j14b4',time:'7:30 AM',dur:'45 min',label:'Elliptical — TD S13 DynamoDB Video',badge:'video',
+       topic:'DynamoDB Overview · Core Components · GSI vs LSI · DynamoDB Streams · DAX · TTL',
+       detail:'Annotate DynamoDB cheat sheet · GSI vs LSI is in S22 Versus section — note the difference now'},
+      {id:'j14b5',time:'8:15 AM',dur:'20 min',label:'Skim RDS + DynamoDB annotations',badge:'review',
+       topic:'Quick pass through cheat sheet marks',detail:''},
+      {id:'j14b6',time:'9:00 AM',dur:'rest',label:'Golf — earned it',badge:'golf',topic:'No studying after 9am. Done.',detail:'',isBreak:true},
+    ]
+  },
+  {
+    id:'jun15',name:'Sun Jun 15',short:'Sun 6/15',topic:'App Integration + Full Exam #2',section:'TD Section 14',
+    type:'weekend',examWeek:false,
+    blocks:[
+      {id:'j15b1',time:'5:00 AM',dur:'45 min',label:'Cold Recall — TD S12–S13 RDS + DynamoDB Quiz',badge:'quiz',
+       topic:'RDS + DynamoDB topic quiz — cold recall, no notes',
+       detail:'Multi-AZ failover, CNAME flip, RDS Proxy use cases — common exam questions'},
+      {id:'j15b2',time:'5:45 AM',dur:'30 min',label:'Wrong Answer Review — RDS + DynamoDB',badge:'review',
+       topic:'Every explanation · cross-ref cheat sheets · update domain tracker',detail:''},
+      {id:'j15b3',time:'6:15 AM',dur:'45 min',label:'Elliptical — TD S14 App Integration Video',badge:'video',
+       topic:'SNS Overview · SQS Overview · SQS FIFO + Deduplication ID · Step Functions Overview · Fan-out pattern · SNS filter policies',
+       detail:'Annotate SNS and SQS cheat sheets · SNS filter policy vs multiple queues is a common trap'},
+      {id:'j15b4',time:'7:00 AM',dur:'90 min',label:'Full Timed Exam #2 — 65 questions',badge:'exam',
+       topic:'TD full timed practice exam · simulate real conditions · no pausing · log score in study plan tracker',
+       detail:'Target: beat your exam #1 score of 58%'},
+      {id:'j15b5',time:'8:30 AM',dur:'90 min',label:'Wrong Answer Review — Full Exam #2',badge:'review',
+       topic:'Deep-dive every missed question · tag weak domains in study plan tracker · note patterns',
+       detail:'This session is the most valuable study time of the week'},
+      {id:'j15b6',time:'10:00 AM',dur:'rest',label:'Golf or rest',badge:'golf',topic:'Done for the day. Let it consolidate.',detail:'',isBreak:true},
+    ]
+  },
+  {
+    id:'jun16',name:'Mon Jun 16',short:'Mon 6/16',topic:'Cost + Serverless + Route 53',section:'TD Sections 15–17',
+    type:'weekday',examWeek:false,
+    blocks:[
+      {id:'j16b1',time:'5:00 AM',dur:'45 min',label:'Cold Recall — TD S14 App Integration Quiz',badge:'quiz',
+       topic:'SNS + SQS + Step Functions topic quiz — cold recall',
+       detail:'SNS fan-out, SQS FIFO deduplication, SQS vs SNS use cases — heavily tested'},
+      {id:'j16b2',time:'5:45 AM',dur:'30 min',label:'Wrong Answer Review — App Integration',badge:'review',
+       topic:'Every explanation · cross-ref SNS and SQS cheat sheets',detail:''},
+      {id:'j16b3',time:'6:15 AM',dur:'60 min',label:'Elliptical — TD S15 + S16 Video',badge:'video',
+       topic:'S15: AWS Budgets · Cost Explorer · Cost and Usage Report · Trusted Advisor · Billing Conductor | S16: Serverless Computing Overview · Serverless Architectures',
+       detail:'Annotate cost + serverless cheat sheets · Trusted Advisor check categories on exam'},
+      {id:'j16b4',time:'5:00 PM',dur:'75 min',label:'Desk — TD S17 Route 53 Video',badge:'video',
+       topic:'Route 53 Overview · ALL routing policies: Simple · Weighted · Failover · Latency · Geolocation · Geoproximity (with bias) · IP-Based · Multivalue Answer',
+       detail:'Annotate Route 53 cheat sheet heavily · Geoproximity vs Geolocation distinction is on every exam'},
+      {id:'j16b5',time:'6:15 PM',dur:'20 min',label:'Skim Route 53 routing policy annotations',badge:'review',
+       topic:'Routing policies are worth extra time — they trip people up consistently',detail:''},
+      {id:'j16b6',time:'Eve',dur:'—',label:'Golf / decompress',badge:'golf',topic:'Done.',detail:'',isBreak:true},
+    ]
+  },
+  {
+    id:'jun17',name:'Tue Jun 17',short:'Tue 6/17',topic:'CloudFront + EFS + Full Exam #3',section:'TD Sections 18–19',
+    type:'weekday',examWeek:true,
+    blocks:[
+      {id:'j17b1',time:'5:00 AM',dur:'45 min',label:'Cold Recall — TD S17 Route 53 Quiz',badge:'quiz',
+       topic:'Route 53 topic quiz — cold recall · routing policy scenarios',
+       detail:'Geoproximity bias, failover health checks, latency vs geolocation — classic traps'},
+      {id:'j17b2',time:'5:45 AM',dur:'30 min',label:'Wrong Answer Review — Route 53',badge:'review',
+       topic:'Every explanation · cross-ref Route 53 cheat sheet',detail:''},
+      {id:'j17b3',time:'6:15 AM',dur:'45 min',label:'Elliptical — TD S18 CloudFront Video',badge:'video',
+       topic:'CloudFront Overview · CloudFront Security Features · Signed URLs vs Signed Cookies · OAC vs OAI · Cache policies · Origins',
+       detail:'Annotate CloudFront cheat sheet · CloudFront vs S3 Transfer Acceleration is a common comparison'},
+      {id:'j17b4',time:'7:00 AM',dur:'45 min',label:'Desk — TD S19 EFS Video',badge:'video',
+       topic:'EFS Overview · FSx for Lustre · FSx for Windows File Server · FSx for OpenZFS · FSx for NetApp ONTAP · Data Lifecycle Manager · AWS Backup',
+       detail:'Annotate EFS + FSx cheat sheet · FSx for Lustre = HPC workloads, FSx for Windows = SMB/AD'},
+      {id:'j17b5',time:'5:00 PM',dur:'90 min',label:'Full Timed Exam #3 — 65 questions',badge:'exam',
+       topic:'TD full timed practice exam · no pausing · log score in study plan tracker',
+       detail:'Target: 65%+ — should see clear improvement from exam #2'},
+      {id:'j17b6',time:'6:30 PM',dur:'60 min',label:'Wrong Answer Review — Full Exam #3',badge:'review',
+       topic:'Deep-dive every miss · tag weak domains · note which TD section to rewatch',
+       detail:'Update domain tracker — pattern spotting starts now'},
+    ]
+  },
+  {
+    id:'jun18',name:'Wed Jun 18',short:'Wed 6/18',topic:'CloudWatch + Other Services',section:'TD Sections 20–21',
+    type:'weekday',examWeek:true,
+    blocks:[
+      {id:'j18b1',time:'5:00 AM',dur:'45 min',label:'Cold Recall — TD S18–S19 CloudFront + EFS Quiz',badge:'quiz',
+       topic:'CloudFront + EFS topic quiz — cold recall',
+       detail:'Signed URLs, OAC, FSx use cases — common scenario questions'},
+      {id:'j18b2',time:'5:45 AM',dur:'30 min',label:'Wrong Answer Review — CloudFront + EFS',badge:'review',
+       topic:'Every explanation · cross-ref cheat sheets',detail:''},
+      {id:'j18b3',time:'6:15 AM',dur:'60 min',label:'Elliptical — TD S20 CloudWatch Video',badge:'video',
+       topic:'CloudWatch Overview · Metrics for EC2 · CloudWatch Alarms · Logs and Metric Filters · EventBridge',
+       detail:'Annotate CloudWatch cheat sheet · CloudWatch vs CloudTrail vs Config distinction is always tested'},
+      {id:'j18b4',time:'5:00 PM',dur:'75 min',label:'Desk — TD S21 Other Services Video',badge:'video',
+       topic:'Lambda · API Gateway · Beanstalk · Config · Organizations · CloudTrail · Macie · Security Hub · Directory Service · Compute Optimizer · RAM · OpenSearch · QuickSight · Amplify · Detective · Audit Manager',
+       detail:'S21 is wide but shallow — focus on what each service does in one sentence · annotate cheat sheet'},
+      {id:'j18b5',time:'6:15 PM',dur:'90 min',label:'Full Timed Exam #4 — 65 questions',badge:'exam',
+       topic:'TD full timed practice exam · log score in study plan tracker',
+       detail:'Target: 70%+ — trending toward passing range'},
+      {id:'j18b6',time:'7:45 PM',dur:'45 min',label:'Wrong Answer Review — Full Exam #4',badge:'review',
+       topic:'Every miss · update domain tracker · flag anything still weak',detail:''},
+    ]
+  },
+  {
+    id:'jun19',name:'Thu Jun 19',short:'Thu 6/19',topic:'S22: Versus Section + Full Exam #5',section:'TD Section 22 — CRITICAL',
+    type:'weekday',examWeek:true,
+    blocks:[
+      {id:'j19b1',time:'5:00 AM',dur:'45 min',label:'Cold Recall — TD S20–S21 CloudWatch + Other Services Quiz',badge:'quiz',
+       topic:'CloudWatch + Other Services topic quiz — cold recall',
+       detail:'CloudWatch vs CloudTrail vs Config · Organizations SCP vs IAM · Lambda vs Beanstalk — all tested'},
+      {id:'j19b2',time:'5:45 AM',dur:'30 min',label:'Wrong Answer Review — CloudWatch + Other',badge:'review',
+       topic:'Every explanation · cross-ref cheat sheets · update domain tracker',detail:''},
+      {id:'j19b3',time:'6:15 AM',dur:'75 min',label:'Elliptical — TD S22 Versus Section',badge:'vs',
+       topic:'S3 vs EFS vs EBS · HA vs Fault Tolerance · File vs Volume vs Tape Storage Gateway · RTO vs RPO · Security Group vs NACL · Storage Gateway vs DataSync · SSM Parameter Store vs Secrets Manager · GSI vs LSI',
+       detail:'THIS IS EXAM GOLD — every comparison maps directly to scenario questions · annotate heavily'},
+      {id:'j19b4',time:'5:00 PM',dur:'90 min',label:'Full Timed Exam #5 — 65 questions',badge:'exam',
+       topic:'TD full timed practice exam · log score in study plan tracker',
+       detail:'Target: 75%+ — if you hit this you are ready to sit the real exam'},
+      {id:'j19b5',time:'6:30 PM',dur:'60 min',label:'Wrong Answer Review — Full Exam #5',badge:'review',
+       topic:'Every miss · if still weak on a domain rewatch that specific TD section tonight',
+       detail:'If score ≥ 80% — book the exam right now if not already done'},
+    ]
+  },
+  {
+    id:'jun20',name:'Fri Jun 20',short:'Fri 6/20',topic:'S23 Exam Tips + Flashcards',section:'TD Section 23 + Bonus Flashcards',
+    type:'weekday',examWeek:true,
+    blocks:[
+      {id:'j20b1',time:'5:00 AM',dur:'30 min',label:'Elliptical — TD S23 Exam Tips',badge:'vs',
+       topic:'Final Exam Tips and Remarks (SAA-C03) — watch the full section',
+       detail:'Jon Bonso specifically highlights question patterns and common wrong answer traps'},
+      {id:'j20b2',time:'5:30 AM',dur:'45 min',label:'Elliptical — Flashcards Part 1',badge:'vs',
+       topic:'AWS SAA-C03 Flash Cards Part 1 — active recall, not passive reading',
+       detail:'Say the answer out loud before flipping · flag any you hesitate on'},
+      {id:'j20b3',time:'6:15 AM',dur:'30 min',label:'Desk — Flashcards Part 2',badge:'vs',
+       topic:'AWS SAA-C03 Flash Cards Part 2 — complete the bonus section',
+       detail:'Focus on any card you hesitated on from Part 1'},
+      {id:'j20b4',time:'6:45 AM',dur:'30 min',label:'TD Random Mode — 30 questions',badge:'quiz',
+       topic:'Untimed random mode · weakest domains only per your domain tracker',
+       detail:'Not a full exam — targeted drilling on gaps'},
+      {id:'j20b5',time:'7:15 AM',dur:'15 min',label:'Confirm exam booking',badge:'exam',
+       topic:'Confirm Sun Jun 22 exam slot is booked · check ID requirements · know the test center location',detail:''},
+      {id:'j20b6',time:'Evening',dur:'—',label:'No studying after 7pm',badge:'golf',
+       topic:'Sleep 7+ hours tonight. Consolidation happens during sleep, not cramming.',detail:'',isBreak:true},
+    ]
+  },
+  {
+    id:'jun21',name:'Sat Jun 21',short:'Sat 6/21',topic:'S24: Final Practice Test',section:'TD Section 24 — Final Mock',
+    type:'weekend',examWeek:true,
+    blocks:[
+      {id:'j21b1',time:'5:00 AM',dur:'90 min',label:'TD S24 Full Practice Test — Final Mock',badge:'exam',
+       topic:'TD Section 24: AWS Certified Solutions Architect Associate Full Practice Test — real exam conditions · log score',
+       detail:'Target: 80%+ · if you hit it you are definitively ready · no pausing'},
+      {id:'j21b2',time:'6:30 AM',dur:'60 min',label:'Wrong Answer Review — Final Mock',badge:'review',
+       topic:'Last wrong answer review · skim annotated cheat sheets for any flagged topics',
+       detail:'If 80%+ → done. If <80% → rewatch 1-2 specific TD sections only, no new material'},
+      {id:'j21b3',time:'7:30 AM',dur:'rest',label:'Golf — clear your head',badge:'golf',
+       topic:'Done by 7:30am. No studying after that. Golf all day. Let everything consolidate.',detail:'',isBreak:true},
+      {id:'j21b4',time:'Evening',dur:'—',label:'No cramming tonight',badge:'golf',
+       topic:'Early to bed. 7+ hours sleep. No exceptions.',detail:'',isBreak:true},
+    ]
+  },
+  {
+    id:'jun22',name:'Sun Jun 22',short:'Sun 6/22',topic:'EXAM DAY',section:'AWS SAA-C03',
+    type:'weekend',examWeek:true,
+    blocks:[
+      {id:'j22b1',time:'5:00 AM',dur:'20 min',label:'Light review — annotated cheat sheets only',badge:'review',
+       topic:'Skim your annotated cheat sheet notes — 20 min max · no new material · no full sections',
+       detail:'Focus on the Versus section annotations and any flagged routing policy notes'},
+      {id:'j22b2',time:'Morning',dur:'—',label:'Sit the AWS SAA-C03 exam',badge:'exam',
+       topic:'You have covered every TD section, taken 5+ full exams, and reviewed every wrong answer. You are ready.',
+       detail:'Trust the work. Eliminate wrong answers. When in doubt — most cost-effective and least operational overhead.'},
+      {id:'j22b3',time:'Afternoon',dur:'—',label:'Golf to celebrate the pass',badge:'golf',
+       topic:'You earned it.',detail:'',isBreak:true},
+    ]
+  },
+];
+
+// Storage
+let checked={};
+try{checked=JSON.parse(localStorage.getItem('saa_daily_topics')||'{}');}catch(e){}
+function save(){try{localStorage.setItem('saa_daily_topics',JSON.stringify(checked));}catch(e){}}
+
+function allStudyBlocks(){return DAYS.flatMap(d=>d.blocks.filter(b=>!b.isBreak));}
+function updateGlobalProg(){
+  const all=allStudyBlocks(),done=all.filter(b=>checked[b.id]).length,pct=all.length?Math.round(done/all.length*100):0;
+  document.getElementById('prog').style.width=pct+'%';
+  document.getElementById('prog-txt').textContent=done+' / '+all.length+' blocks done';
+}
+
+// Find today
+const todayStr=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'});
+const DATE_MAP={
+  'Jun 9':'jun9','Jun 10':'jun10','Jun 11':'jun11','Jun 12':'jun12','Jun 13':'jun13',
+  'Jun 14':'jun14','Jun 15':'jun15','Jun 16':'jun16','Jun 17':'jun17','Jun 18':'jun18',
+  'Jun 19':'jun19','Jun 20':'jun20','Jun 21':'jun21','Jun 22':'jun22'
+};
+const todayId=DATE_MAP[todayStr]||null;
+let activeDay=todayId||'jun9';
+
+// Today banner
+function renderTodayBanner(){
+  const banner=document.getElementById('today-banner');
+  const d=DAYS.find(x=>x.id===todayId);
+  if(!d){
+    const examDate=new Date('2026-06-22');const now=new Date();
+    const diff=Math.round((examDate-now)/86400000);
+    banner.innerHTML=`<div class="today-dot" style="background:var(--amber-text)"></div><div><div class="today-label">Sprint Status</div><div class="today-topic">${diff>0?diff+' days until exam':'Exam Day!'}</div></div>`;
+    return;
+  }
+  const studyBlocks=d.blocks.filter(b=>!b.isBreak);
+  const done=studyBlocks.filter(b=>checked[b.id]).length;
+  const examDate=new Date('2026-06-22');const now=new Date();
+  const daysLeft=Math.ceil((examDate-now)/86400000);
+  banner.innerHTML=`
+    <div class="today-dot"></div>
+    <div>
+      <div class="today-label">Today</div>
+      <div class="today-topic">${d.topic}</div>
+      <div class="today-section">${d.section}</div>
+    </div>
+    <div class="today-right">
+      <div class="today-date">${d.name} · ${done}/${studyBlocks.length} done</div>
+      <div class="today-exam">${daysLeft} days until exam · Jun 22</div>
+    </div>`;
+}
+
+// Nav pills
+function renderNav(){
+  const nav=document.getElementById('day-nav');
+  DAYS.forEach(d=>{
+    const studyBlocks=d.blocks.filter(b=>!b.isBreak);
+    const allDone=studyBlocks.length>0&&studyBlocks.every(b=>checked[b.id]);
+    const pill=document.createElement('div');
+    const isToday=d.id===todayId;
+    pill.className='day-pill'+(d.id===activeDay?' active':'')+(isToday?' is-today':'')+(d.type==='weekend'?' is-weekend':'')+(d.section.includes('CRITICAL')||d.topic==='EXAM DAY'?' is-exam':'')+(allDone?' done-all':'');
+    pill.textContent=d.short+(allDone?' ✓':'');
+    pill.dataset.dayId=d.id;
+    pill.addEventListener('click',()=>showDay(d.id));
+    nav.appendChild(pill);
+  });
+}
+
+function showDay(id){
+  activeDay=id;
+  document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.day-pill').forEach(p=>{
+    p.classList.toggle('active',p.dataset.dayId===id);
+  });
+  const panel=document.getElementById('panel-'+id);
+  if(panel)panel.classList.add('active');
+  updateDayProgress(id);
+}
+
+function updateDayProgress(id){
+  const d=DAYS.find(x=>x.id===id);if(!d)return;
+  const studyBlocks=d.blocks.filter(b=>!b.isBreak);
+  const done=studyBlocks.filter(b=>checked[b.id]).length;
+  const el=document.getElementById('dprog-'+id);
+  if(el)el.textContent=done+'/'+studyBlocks.length+' blocks done today';
+}
+
+function toggleBlock(blockId,dayId){
+  checked[blockId]=!checked[blockId];save();
+  const card=document.getElementById('card-'+blockId);
+  if(card)card.classList.toggle('done',checked[blockId]);
+  // update nav pill
+  const d=DAYS.find(x=>x.id===dayId);
+  const studyBlocks=d.blocks.filter(b=>!b.isBreak);
+  const allDone=studyBlocks.every(b=>checked[b.id]);
+  const pill=document.querySelector(`.day-pill[data-day-id="${dayId}"]`);
+  if(pill){
+    pill.classList.toggle('done-all',allDone);
+    pill.textContent=d.short+(allDone?' ✓':'');
+    if(d.id===activeDay)pill.classList.add('active');
+    if(d.id===todayId)pill.classList.add('is-today');
+  }
+  updateDayProgress(dayId);
+  updateGlobalProg();
+  renderTodayBanner();
+}
+
+// Build panels
+function buildPanels(){
+  const container=document.getElementById('day-panels');
+  DAYS.forEach(d=>{
+    const panel=document.createElement('div');
+    panel.className='day-panel'+(d.id===activeDay?' active':'');
+    panel.id='panel-'+d.id;
+    const studyBlocks=d.blocks.filter(b=>!b.isBreak);
+    const done=studyBlocks.filter(b=>checked[b.id]).length;
+    panel.innerHTML=`
+      <div class="day-header">
+        <div class="day-title-row">
+          <div>
+            <div class="day-title">${d.name}</div>
+            <div class="day-subtitle">${d.topic}</div>
+            <div class="day-section-badge">${d.section}</div>
+          </div>
+          <div class="day-progress-txt" id="dprog-${d.id}">${done}/${studyBlocks.length} blocks done today</div>
+        </div>
+      </div>`;
+    const timeline=document.createElement('div');
+    timeline.className='timeline';
+    d.blocks.forEach(b=>{
+      const tlBlock=document.createElement('div');
+      tlBlock.className='tl-block';
+      const dotColor=DOT[b.badge]||'#555a72';
+      const timeCol=document.createElement('div');
+      timeCol.className='tl-time-col';
+      timeCol.innerHTML=`<div class="tl-time">${b.time}</div><div class="tl-dur">${b.dur}</div>`;
+      const conn=document.createElement('div');
+      conn.className='tl-connector';
+      conn.innerHTML=`<div class="tl-dot" style="background:${dotColor}"></div><div class="tl-line"></div>`;
+      const card=document.createElement('div');
+      card.className='tl-card'+(b.isBreak?' is-break':'')+(checked[b.id]?' done':'');
+      card.id='card-'+b.id;
+      card.innerHTML=`
+        <div class="tl-card-head">
+          <div class="tl-label">${b.label}</div>
+          <span class="tl-badge badge-${b.badge}">${b.badge}</span>
+        </div>
+        <div class="tl-topic">${b.topic}</div>
+        ${b.detail?`<div class="tl-detail">${b.detail}</div>`:''}
+      `;
+      if(!b.isBreak){
+        card.addEventListener('click',()=>toggleBlock(b.id,d.id));
+      }
+      tlBlock.appendChild(timeCol);
+      tlBlock.appendChild(conn);
+      tlBlock.appendChild(card);
+      timeline.appendChild(tlBlock);
+    });
+    panel.appendChild(timeline);
+    container.appendChild(panel);
+  });
+}
+
+renderTodayBanner();
+renderNav();
+buildPanels();
+updateGlobalProg();
+</script>
+</body>
+</html>
