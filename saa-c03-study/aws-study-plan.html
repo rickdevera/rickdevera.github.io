@@ -7,21 +7,23 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:#0f1117; --surface:#1a1d27; --surface2:#22263a;
-    --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.14);
-    --text:#e8eaf0; --text2:#8b90a8; --text3:#555a72;
-    --green:#1D9E75; --green-dim:rgba(29,158,117,0.15); --green-text:#4ecda4;
-    --purple:#7f77dd; --purple-dim:rgba(127,119,221,0.15); --purple-text:#a89ff0;
-    --amber:#ef9f27; --amber-dim:rgba(239,159,39,0.15); --amber-text:#f5c16a;
-    --blue:#378add; --blue-dim:rgba(55,138,221,0.15); --blue-text:#7ab8f0;
-    --coral:#d85a30; --coral-dim:rgba(216,90,48,0.15); --coral-text:#f0997b;
-    --gray-dim:rgba(136,135,128,0.15); --gray-text:#b4b2a9;
-    --red-dim:rgba(220,60,60,0.15); --red-text:#f07a7a;
-    --radius:10px; --radius-sm:6px;
+    --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;
+    --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+    --text:#e8eaf0;--text2:#8b90a8;--text3:#555a72;
+    --green:#1D9E75;--green-dim:rgba(29,158,117,0.15);--green-text:#4ecda4;
+    --purple-dim:rgba(127,119,221,0.15);--purple-text:#a89ff0;
+    --amber-dim:rgba(239,159,39,0.15);--amber-text:#f5c16a;
+    --blue:#378add;--blue-dim:rgba(55,138,221,0.15);--blue-text:#7ab8f0;
+    --coral-dim:rgba(216,90,48,0.15);--coral-text:#f0997b;
+    --gray-dim:rgba(136,135,128,0.15);--gray-text:#b4b2a9;
+    --red-dim:rgba(220,60,60,0.15);--red-text:#f07a7a;
+    --radius:10px;--radius-sm:6px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.5;min-height:100vh;}
   .page{max-width:1100px;margin:0 auto;padding:2rem 1.5rem 4rem;}
+
+  /* HEADER */
   .header{margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:0.5px solid var(--border);}
   .header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.25rem;}
   .title-block h1{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:500;letter-spacing:-0.02em;margin-bottom:4px;}
@@ -95,8 +97,10 @@
   /* PLAN */
   .week-section{margin-bottom:2rem;}
   .week-header{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:0.5px solid var(--border);}
+  .week-note{font-size:11px;color:var(--text3);font-family:'IBM Plex Mono',monospace;margin-bottom:0.75rem;}
   .days-grid{display:grid;gap:10px;}
   .grid-2{grid-template-columns:repeat(2,1fr);}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
   .grid-5{grid-template-columns:repeat(5,1fr);}
   .day-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:0.875rem;}
   .day-card.is-today{border-color:rgba(55,138,221,0.5);box-shadow:0 0 0 1px rgba(55,138,221,0.15);}
@@ -107,19 +111,21 @@
   .day-date{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);}
   .today-pip{display:inline-block;width:6px;height:6px;background:var(--blue);border-radius:50%;margin-left:5px;vertical-align:middle;}
   .day-theme{font-size:11px;color:var(--text2);margin-bottom:6px;padding-bottom:6px;border-bottom:0.5px solid var(--border);}
+  .day-section-tag{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);margin-bottom:8px;}
+  .day-progress{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:8px;}
 
-  /* TIME BLOCKS IN DAY CARDS */
+  /* TIME BLOCKS */
   .time-block{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:0.5px solid var(--border);cursor:pointer;border-radius:4px;transition:background 0.1s;}
   .time-block:last-child{border-bottom:none;}
   .time-block:hover{background:var(--surface2);margin:0 -4px;padding-left:4px;padding-right:4px;}
   .time-block.done .tb-content{color:var(--green-text);text-decoration:line-through;text-decoration-color:rgba(29,158,117,0.5);}
-  .time-block.is-break{cursor:default;opacity:0.6;}
+  .time-block.is-break{cursor:default;opacity:0.55;}
   .time-block.is-break:hover{background:transparent;margin:0;padding:5px 0;}
   .chk{width:14px;height:14px;border-radius:3px;border:1px solid var(--border2);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;background:transparent;transition:all 0.15s;}
   .time-block.done .chk{background:var(--green);border-color:var(--green);}
   .chk svg{opacity:0;}
   .time-block.done .chk svg{opacity:1;}
-  .tb-left{display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;width:58px;}
+  .tb-left{display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;width:54px;}
   .tb-time{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);}
   .tb-dur{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);opacity:0.6;}
   .tb-content{font-size:11px;color:var(--text2);line-height:1.35;flex:1;}
@@ -129,8 +135,7 @@
   .badge-review{background:var(--amber-dim);color:var(--amber-text);}
   .badge-exam{background:var(--blue-dim);color:var(--blue-text);}
   .badge-golf{background:var(--green-dim);color:var(--green-text);}
-  .badge-break{background:var(--gray-dim);color:var(--gray-text);}
-  .day-progress{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:8px;}
+  .badge-vs{background:var(--gray-dim);color:var(--gray-text);}
 
   /* RULES */
   .rule-box{margin-top:2rem;padding:1rem 1.25rem;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-sm);display:grid;grid-template-columns:1fr 1fr;gap:0.5rem 2rem;}
@@ -138,8 +143,9 @@
   .rule:last-child{border-bottom:none;}
   .rule span{color:var(--green-text);}
 
-  @media(max-width:800px){.grid-5{grid-template-columns:repeat(2,1fr);}.stats-row{grid-template-columns:repeat(2,1fr);}.countdown-banner{grid-template-columns:repeat(2,1fr);}.domain-grid{grid-template-columns:repeat(2,1fr);}.score-form{grid-template-columns:1fr 1fr;}.rule-box{grid-template-columns:1fr;}}
-  @media(max-width:500px){.grid-2,.grid-5{grid-template-columns:1fr;}.stats-row{grid-template-columns:repeat(2,1fr);}.header-top{flex-direction:column;}.domain-grid{grid-template-columns:repeat(2,1fr);}.score-form{grid-template-columns:1fr;}}
+  @media(max-width:900px){.grid-5{grid-template-columns:repeat(3,1fr);}}
+  @media(max-width:700px){.grid-5,.grid-3{grid-template-columns:repeat(2,1fr);}.stats-row{grid-template-columns:repeat(2,1fr);}.countdown-banner{grid-template-columns:repeat(2,1fr);}.domain-grid{grid-template-columns:repeat(2,1fr);}.score-form{grid-template-columns:1fr 1fr;}.rule-box{grid-template-columns:1fr;}}
+  @media(max-width:480px){.grid-2,.grid-5,.grid-3{grid-template-columns:1fr;}.stats-row{grid-template-columns:repeat(2,1fr);}.header-top{flex-direction:column;}.score-form{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -149,7 +155,7 @@
     <div class="header-top">
       <div class="title-block">
         <h1>AWS SAA-C03 Study Plan</h1>
-        <p>Jun 9 (Mon) → Jun 22 (Sun) · 4–5 hrs/day · TD videos primary</p>
+        <p>Jun 9 → Jun 22 · Follows TD course order exactly · 4–5 hrs/day</p>
       </div>
       <div class="exam-badge"><strong>Target: Jun 22</strong>AWS Solutions Architect Associate</div>
     </div>
@@ -160,31 +166,32 @@
       <div class="stat-card"><div class="stat-label">Score target</div><div class="stat-val green">75%+</div></div>
     </div>
     <div class="prog-track"><div class="prog-fill" id="prog"></div></div>
-    <div class="prog-label" id="prog-lbl">Click any block to mark it done</div>
+    <div class="prog-label" id="prog-lbl">Click any block to mark it done — progress saves in this browser</div>
   </div>
 
   <div class="countdown-banner" id="countdown-banner"></div>
 
   <div class="legend">
-    <div class="leg-item"><div class="leg-dot" style="background:#f0997b"></div>TD video (elliptical 1.25x)</div>
-    <div class="leg-item"><div class="leg-dot" style="background:#a89ff0"></div>TD quiz (cold recall next morning)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#f0997b"></div>TD video (elliptical 1.25x + annotate cheat sheet)</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#a89ff0"></div>TD quiz (cold recall next morning at desk)</div>
     <div class="leg-item"><div class="leg-dot" style="background:#7ab8f0"></div>Full timed exam (65q)</div>
     <div class="leg-item"><div class="leg-dot" style="background:#f5c16a"></div>Wrong answer review</div>
-    <div class="leg-item"><div class="leg-dot" style="background:#4ecda4"></div>Golf / break</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#b4b2a9"></div>Versus section / flashcards</div>
+    <div class="leg-item"><div class="leg-dot" style="background:#4ecda4"></div>Golf / rest</div>
   </div>
 
   <!-- SCORE TRACKER -->
   <div class="tracker-section">
-    <div class="section-title">Practice Exam Score Tracker <span>log TD full exam results here</span></div>
+    <div class="section-title">Practice Exam Score Tracker <span>log TD full exam results · 75% = target · 80% = book it</span></div>
     <div class="score-form">
       <div class="form-group"><div class="form-label">Exam #</div><input class="form-input" type="number" id="inp-num" min="1" max="10" placeholder="1"></div>
-      <div class="form-group"><div class="form-label">Score %</div><input class="form-input" type="number" id="inp-score" min="0" max="100" placeholder="72"></div>
+      <div class="form-group"><div class="form-label">Score %</div><input class="form-input" type="number" id="inp-score" min="0" max="100" placeholder="58"></div>
       <div class="form-group"><div class="form-label">Date</div><input class="form-input" type="date" id="inp-date"></div>
       <button class="btn" onclick="addScore()">+ Log Score</button>
     </div>
     <div class="chart-wrap">
-      <div style="position:relative;height:160px;" id="chart-wrap">
-        <div class="chart-empty" id="chart-empty">No scores yet — first full exam scheduled Jun 17</div>
+      <div style="position:relative;height:160px;">
+        <div class="chart-empty" id="chart-empty">Log your exam #1 score (58.46%) above to start your trend chart</div>
         <canvas id="score-chart" style="display:none;width:100%;height:100%;"></canvas>
       </div>
     </div>
@@ -193,7 +200,7 @@
 
   <!-- DOMAIN TRACKER -->
   <div class="tracker-section">
-    <div class="section-title">Weak Domain Tracker <span>flag → work on it · mastered → move on</span></div>
+    <div class="section-title">Weak Domain Tracker <span>based on TD exam categories · flag → study · mastered → move on</span></div>
     <div class="domain-grid" id="domain-grid"></div>
   </div>
 
@@ -205,26 +212,26 @@
     <div class="rule"><span>Rule 2:</span> Annotate cheat sheet while watching — circle, 2 words max.</div>
     <div class="rule"><span>Rule 3:</span> Wrong answer review is the actual studying. Never skip it.</div>
     <div class="rule"><span>Rule 4:</span> TD exam ≥ 80% → book the real exam immediately.</div>
-    <div class="rule"><span>Rule 5:</span> Breaks are consolidation — don't study through them.</div>
+    <div class="rule"><span>Rule 5:</span> Section 22 Versus section is exam gold. Don't skip it.</div>
     <div class="rule"><span>Rule 6:</span> The plan is built. Execute. Stop optimizing.</div>
   </div>
 </div>
 
 <script>
 // COUNTDOWN
-const EXAM_DATE = new Date('2026-06-22T08:00:00');
+const EXAM_DATE=new Date('2026-06-22T08:00:00');
 function renderCountdown(){
-  const now=new Date(), diff=EXAM_DATE-now, banner=document.getElementById('countdown-banner');
+  const now=new Date(),diff=EXAM_DATE-now,banner=document.getElementById('countdown-banner');
   if(diff<=0){banner.innerHTML=`<div class="cd-card exam-today" style="grid-column:1/-1;text-align:center"><div class="cd-num green">EXAM DAY</div><div class="cd-label">Go get your AWS SAA-C03!</div></div>`;return;}
   const days=Math.floor(diff/86400000),hours=Math.floor((diff%86400000)/3600000),mins=Math.floor((diff%3600000)/60000);
-  const urgent=days<=3, pct=Math.round((1-diff/(EXAM_DATE-new Date('2026-06-09T00:00:00')))*100);
+  const urgent=days<=3,pct=Math.round((1-diff/(EXAM_DATE-new Date('2026-06-09T00:00:00')))*100);
   banner.innerHTML=`
     <div class="cd-card ${urgent?'urgent':''}"><div class="cd-num ${urgent?'amber':''}">${days}</div><div class="cd-unit">days</div><div class="cd-label">until exam</div></div>
     <div class="cd-card ${urgent?'urgent':''}"><div class="cd-num ${urgent?'amber':''}">${hours}</div><div class="cd-unit">hours</div><div class="cd-label">remaining today</div></div>
     <div class="cd-card"><div class="cd-num">${mins}</div><div class="cd-unit">minutes</div><div class="cd-label">in current hour</div></div>
     <div class="cd-card"><div class="cd-num ${pct>=70?'green':''}">${pct}%</div><div class="cd-unit">of sprint</div><div class="cd-label">elapsed</div></div>`;
 }
-renderCountdown(); setInterval(renderCountdown,60000);
+renderCountdown();setInterval(renderCountdown,60000);
 
 // SCORE TRACKER
 let scores=[];
@@ -236,24 +243,23 @@ function scoreLabel(s){return s>=80?'✓ Ready':s>=70?'~ Close':'✗ Study';}
 function renderScores(){
   const empty=document.getElementById('chart-empty'),canvas=document.getElementById('score-chart'),wrap=document.getElementById('score-table-wrap');
   if(!scores.length){empty.style.display='block';canvas.style.display='none';wrap.innerHTML='';return;}
-  empty.style.display='none'; canvas.style.display='block';
+  empty.style.display='none';canvas.style.display='block';
   const cw=canvas.parentElement.clientWidth||600,ch=160;
-  canvas.width=cw; canvas.height=ch;
-  const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,cw,ch);
+  canvas.width=cw;canvas.height=ch;
+  const ctx=canvas.getContext('2d');ctx.clearRect(0,0,cw,ch);
   const pad={top:16,right:20,bottom:30,left:36},w=cw-pad.left-pad.right,h=ch-pad.top-pad.bottom;
   [60,70,75,80,100].forEach(gl=>{
     const y=pad.top+h-(gl/100)*h;
     ctx.strokeStyle=gl===75?'rgba(55,138,221,0.25)':gl===80?'rgba(29,158,117,0.25)':'rgba(255,255,255,0.05)';
-    ctx.lineWidth=gl===75||gl===80?1:0.5; ctx.setLineDash(gl===75||gl===80?[4,3]:[]);
+    ctx.lineWidth=gl===75||gl===80?1:0.5;ctx.setLineDash(gl===75||gl===80?[4,3]:[]);
     ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+w,y);ctx.stroke();
-    ctx.font='10px IBM Plex Mono,monospace'; ctx.textAlign='right';
+    ctx.font='10px IBM Plex Mono,monospace';ctx.textAlign='right';
     ctx.fillStyle=gl===80?'#4ecda4':gl===75?'#7ab8f0':'#555a72';
     ctx.fillText(gl+'%',pad.left-4,y+3);
   });
   ctx.setLineDash([]);
-  const sorted=[...scores].sort((a,b)=>a.num-b.num);
-  const xStep=sorted.length>1?w/(sorted.length-1):w/2;
-  ctx.strokeStyle='#7f77dd'; ctx.lineWidth=2; ctx.beginPath();
+  const sorted=[...scores].sort((a,b)=>a.num-b.num),xStep=sorted.length>1?w/(sorted.length-1):w/2;
+  ctx.strokeStyle='#7f77dd';ctx.lineWidth=2;ctx.beginPath();
   sorted.forEach((s,i)=>{const x=pad.left+(sorted.length>1?i*xStep:w/2),y=pad.top+h-(s.score/100)*h;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
   ctx.stroke();
   sorted.forEach((s,i)=>{
@@ -268,29 +274,29 @@ function renderScores(){
 function addScore(){
   const num=parseInt(document.getElementById('inp-num').value),score=parseInt(document.getElementById('inp-score').value),date=document.getElementById('inp-date').value;
   if(isNaN(num)||isNaN(score)||score<0||score>100){alert('Enter valid exam number and score.');return;}
-  scores.push({id:Date.now(),num,score,date}); saveScores(); renderScores();
+  scores.push({id:Date.now(),num,score,date});saveScores();renderScores();
   document.getElementById('inp-score').value='';
   document.getElementById('inp-num').value=scores.length+1;
   document.getElementById('inp-date').value=new Date().toISOString().split('T')[0];
 }
 function deleteScore(id){scores=scores.filter(s=>s.id!==id);saveScores();renderScores();}
-renderScores(); window.addEventListener('resize',renderScores);
+renderScores();window.addEventListener('resize',renderScores);
 document.getElementById('inp-num').value=scores.length+1;
 
-// DOMAIN TRACKER
-const DOMAINS=['IAM & Identity','EC2 & Compute','S3 & Storage','VPC & Networking','Databases','HA & DR','Messaging','Security','Adv Networking','Cost & Ops','Serverless','CloudFormation'];
+// DOMAIN TRACKER — matches TD exam categories
+const DOMAINS=['IAM & Identity (S5)','VPC & Networking (S6)','EC2 & Auto Scaling (S7-S8)','EBS & Storage (S9)','ELB (S10)','S3 (S11)','RDS & Aurora (S12)','DynamoDB (S13)','App Integration SNS/SQS (S14)','Serverless & Lambda (S16)','Route 53 (S17)','CloudFront (S18)','EFS / FSx (S19)','CloudWatch (S20)','Other Services (S21)','Versus / Comparisons (S22)'];
 let domainData={};
 try{domainData=JSON.parse(localStorage.getItem('saa_domains')||'{}');}catch(e){}
 function saveDomains(){try{localStorage.setItem('saa_domains',JSON.stringify(domainData));}catch(e){}}
 function renderDomains(){
-  const grid=document.getElementById('domain-grid'); grid.innerHTML='';
+  const grid=document.getElementById('domain-grid');grid.innerHTML='';
   DOMAINS.forEach(d=>{
     const dd=domainData[d]||{status:'none',notes:''};
     const card=document.createElement('div');
     card.className='domain-card'+(dd.status==='flagged'?' flagged':dd.status==='mastered'?' mastered':'');
     const statusEmoji=dd.status==='flagged'?'⚠️ Needs work':dd.status==='mastered'?'✓ Mastered':'· Not reviewed';
     const statusColor=dd.status==='flagged'?'var(--amber-text)':dd.status==='mastered'?'var(--green-text)':'var(--text3)';
-    card.innerHTML=`<div class="domain-name">${d}</div><div class="domain-status" style="color:${statusColor}">${statusEmoji}</div><div class="domain-actions"><button class="domain-btn flag" onclick="setDomain('${d}','flagged',event)">⚠ Flag</button><button class="domain-btn master" onclick="setDomain('${d}','mastered',event)">✓ Done</button><button class="domain-btn" onclick="setDomain('${d}','none',event)">✕ Clear</button></div><textarea class="domain-notes-input" rows="2" placeholder="weak spot notes..." onchange="saveDomainNote('${d}',this.value)">${dd.notes||''}</textarea>`;
+    card.innerHTML=`<div class="domain-name">${d}</div><div class="domain-status" style="color:${statusColor};font-size:10px;font-family:'IBM Plex Mono',monospace">${statusEmoji}</div><div class="domain-actions"><button class="domain-btn flag" onclick="setDomain('${d}','flagged',event)">⚠ Flag</button><button class="domain-btn master" onclick="setDomain('${d}','mastered',event)">✓ Done</button><button class="domain-btn" onclick="setDomain('${d}','none',event)">✕ Clear</button></div><textarea class="domain-notes-input" rows="2" placeholder="weak spot notes..." onchange="saveDomainNote('${d}',this.value)">${dd.notes||''}</textarea>`;
     grid.appendChild(card);
   });
 }
@@ -298,110 +304,113 @@ function setDomain(name,status,e){e.stopPropagation();if(!domainData[name])domai
 function saveDomainNote(name,val){if(!domainData[name])domainData[name]={status:'none',notes:''};domainData[name].notes=val;saveDomains();}
 renderDomains();
 
-// PLAN DATA — each day has time-blocked tasks
+// PLAN — follows TD course order exactly
 const TODAY=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'});
+
 const plan=[
   {
-    label:"Week 1 — Mon Jun 9 through Fri Jun 13",
-    note:"TD video on elliptical · cold quiz next morning · annotate cheat sheet while watching",
+    label:"Week 1 — Mon Jun 9 through Fri Jun 13 · TD Sections 5–11",
+    note:"↳ TD video on elliptical 1.25x · annotate cheat sheet while watching · cold quiz next morning at desk",
     grid:"grid-5",
     days:[
-      {name:"Mon",date:"Jun 9",theme:"IAM & Identity",blocks:[
-        {id:"d1b1",time:"5:00AM",dur:"60m",text:"TD video: IAM users, groups, roles, policies — elliptical 1.25x, annotate cheat sheet",badge:"badge-video"},
-        {id:"d1b2",time:"6:00AM",dur:"45m",text:"Notes only — no quiz today. Let IAM sit overnight.",badge:"badge-review"},
-        {id:"d1b3",time:"5:00PM",dur:"60m",text:"TD video: STS, cross-account, permission boundaries — elliptical or desk",badge:"badge-video"},
-        {id:"d1b4",time:"8:00PM",dur:"20m",text:"Skim annotated IAM cheat sheet only. No new material.",badge:"badge-review"},
+      {name:"Mon",date:"Jun 9",theme:"S5: IAM & Identity",section:"TD Sections 5",blocks:[
+        {id:"d1b1",time:"5:00AM",dur:"60m",text:"S5 video: IAM Overview, IAM Identities, Policy Types, Policy Basics — elliptical, annotate cheat sheet",badge:"badge-video"},
+        {id:"d1b2",time:"6:00AM",dur:"30m",text:"S5 video: IAM Policy Evaluation Logic, IAM Access Analyzer — continue elliptical",badge:"badge-video"},
+        {id:"d1b3",time:"6:30AM",dur:"20m",text:"Notes only today — no quiz. Let IAM sit overnight.",badge:"badge-review"},
+        {id:"d1b4",time:"5:00PM",dur:"30m",text:"Skim annotated IAM cheat sheet. Add any missed terms from videos.",badge:"badge-review"},
       ]},
-      {name:"Tue",date:"Jun 10",theme:"Compute — quiz IAM cold first",blocks:[
-        {id:"d2b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD IAM topic quiz — desk, first thing. No notes beforehand.",badge:"badge-quiz"},
-        {id:"d2b2",time:"5:45AM",dur:"45m",text:"Wrong answer review — every explanation, cross-ref IAM cheat sheet",badge:"badge-review"},
-        {id:"d2b3",time:"6:30AM",dur:"60m",text:"TD video: EC2 types, purchasing options, AMIs, ASG — elliptical 1.25x",badge:"badge-video"},
-        {id:"d2b4",time:"5:00PM",dur:"60m",text:"TD video: Lambda, ECS/EKS/Fargate — annotate compute cheat sheet",badge:"badge-video"},
-        {id:"d2b5",time:"8:00PM",dur:"20m",text:"Skim compute cheat sheet annotations only.",badge:"badge-review"},
+      {name:"Tue",date:"Jun 10",theme:"S6: VPC — quiz IAM cold first",section:"TD Sections 6",blocks:[
+        {id:"d2b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD S5 IAM quiz — desk, first thing. No notes beforehand.",badge:"badge-quiz"},
+        {id:"d2b2",time:"5:45AM",dur:"45m",text:"Wrong answer review — every explanation, cross-ref IAM cheat sheet. Flag IAM in domain tracker if <75%.",badge:"badge-review"},
+        {id:"d2b3",time:"6:30AM",dur:"60m",text:"S6 video: VPC Overview, Anatomy of a VPC, Network Architectures — elliptical, annotate",badge:"badge-video"},
+        {id:"d2b4",time:"5:00PM",dur:"45m",text:"S6 video: VPC Peering Longest Prefix Match — complete section, annotate cheat sheet",badge:"badge-video"},
+        {id:"d2b5",time:"5:45PM",dur:"20m",text:"Skim VPC cheat sheet annotations.",badge:"badge-review"},
       ]},
-      {name:"Wed",date:"Jun 11",theme:"Storage — quiz compute cold first",blocks:[
-        {id:"d3b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD EC2 + compute topic quiz — desk, first thing",badge:"badge-quiz"},
-        {id:"d3b2",time:"5:45AM",dur:"45m",text:"Wrong answer review — cross-ref compute cheat sheet",badge:"badge-review"},
-        {id:"d3b3",time:"6:30AM",dur:"60m",text:"TD video: S3 storage classes, lifecycle, replication, security — elliptical",badge:"badge-video"},
-        {id:"d3b4",time:"5:00PM",dur:"60m",text:"TD video: EBS types, EFS, FSx — annotate storage cheat sheet",badge:"badge-video"},
-        {id:"d3b5",time:"8:00PM",dur:"20m",text:"Skim storage cheat sheet annotations.",badge:"badge-review"},
+      {name:"Wed",date:"Jun 11",theme:"S7–S8: EC2 + Auto Scaling — quiz VPC cold first",section:"TD Sections 7–8",blocks:[
+        {id:"d3b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD S6 VPC quiz — desk, first thing.",badge:"badge-quiz"},
+        {id:"d3b2",time:"5:45AM",dur:"45m",text:"Wrong answer review — cross-ref VPC cheat sheet. Flag VPC in tracker if <75%.",badge:"badge-review"},
+        {id:"d3b3",time:"6:30AM",dur:"60m",text:"S7 video: EC2 Overview, Purchasing Options, On-Demand, Reserved, Spot, Savings Plans — elliptical",badge:"badge-video"},
+        {id:"d3b4",time:"5:00PM",dur:"60m",text:"S7 video: EC2 Instance Types, AMI, Metadata, Image Builder, Networking, Security — annotate",badge:"badge-video"},
+        {id:"d3b5",time:"6:00PM",dur:"30m",text:"S8 video: EC2 Auto Scaling Overview, Types, Lifecycle Hooks — annotate cheat sheet",badge:"badge-video"},
       ]},
-      {name:"Thu",date:"Jun 12",theme:"Networking — quiz storage cold first",blocks:[
-        {id:"d4b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD S3 + storage topic quiz — desk, first thing",badge:"badge-quiz"},
-        {id:"d4b2",time:"5:45AM",dur:"45m",text:"Wrong answer review — cross-ref storage cheat sheet",badge:"badge-review"},
-        {id:"d4b3",time:"6:30AM",dur:"60m",text:"TD video: VPC, subnets, IGW, NAT gateway, SGs vs NACLs — elliptical",badge:"badge-video"},
-        {id:"d4b4",time:"5:00PM",dur:"60m",text:"TD video: VPC endpoints, PrivateLink, peering — annotate VPC cheat sheet",badge:"badge-video"},
-        {id:"d4b5",time:"8:00PM",dur:"20m",text:"Skim VPC cheat sheet annotations.",badge:"badge-review"},
+      {name:"Thu",date:"Jun 12",theme:"S9–S10: EBS + ELB — quiz EC2 cold first",section:"TD Sections 9–10",blocks:[
+        {id:"d4b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD S7–S8 EC2 + Auto Scaling quiz — desk, first thing.",badge:"badge-quiz"},
+        {id:"d4b2",time:"5:45AM",dur:"45m",text:"Wrong answer review — cross-ref EC2 cheat sheet. Flag EC2 in tracker if <75%.",badge:"badge-review"},
+        {id:"d4b3",time:"6:30AM",dur:"45m",text:"S9 video: EBS Overview, EBS Types — elliptical, annotate cheat sheet",badge:"badge-video"},
+        {id:"d4b4",time:"5:00PM",dur:"45m",text:"S10 video: ELB Overview, ELB Types (ALB, NLB, CLB) — annotate cheat sheet",badge:"badge-video"},
+        {id:"d4b5",time:"5:45PM",dur:"20m",text:"Skim EBS + ELB cheat sheet annotations.",badge:"badge-review"},
       ]},
-      {name:"Fri",date:"Jun 13",theme:"Databases — quiz VPC cold first",blocks:[
-        {id:"d5b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD VPC + networking topic quiz — desk, first thing",badge:"badge-quiz"},
-        {id:"d5b2",time:"5:45AM",dur:"45m",text:"Wrong answer review — cross-ref VPC cheat sheet",badge:"badge-review"},
-        {id:"d5b3",time:"6:30AM",dur:"60m",text:"TD video: RDS Multi-AZ, Aurora, DynamoDB, ElastiCache — elliptical",badge:"badge-video"},
-        {id:"d5b4",time:"5:00PM",dur:"60m",text:"TD video: Redshift, Neptune, DocumentDB — annotate DB cheat sheet",badge:"badge-video"},
-        {id:"d5b5",time:"8:00PM",dur:"20m",text:"Skim databases cheat sheet annotations.",badge:"badge-review"},
+      {name:"Fri",date:"Jun 13",theme:"S11: S3 — quiz EBS/ELB cold first",section:"TD Section 11",blocks:[
+        {id:"d5b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD S9–S10 EBS + ELB quiz — desk, first thing.",badge:"badge-quiz"},
+        {id:"d5b2",time:"5:45AM",dur:"45m",text:"Wrong answer review — cross-ref EBS + ELB cheat sheets. Flag in tracker if needed.",badge:"badge-review"},
+        {id:"d5b3",time:"6:30AM",dur:"60m",text:"S11 video: S3 Overview, Storage Classes, Minimum Storage Duration, Event Notifications — elliptical",badge:"badge-video"},
+        {id:"d5b4",time:"5:00PM",dur:"30m",text:"S11 video: Complete S3 section — annotate S3 cheat sheet",badge:"badge-video"},
+        {id:"d5b5",time:"5:30PM",dur:"20m",text:"Skim S3 cheat sheet annotations.",badge:"badge-review"},
       ]},
     ]
   },
   {
-    label:"Weekend 1 — Sat Jun 14 + Sun Jun 15",
+    label:"Weekend 1 — Sat Jun 14 + Sun Jun 15 · TD Sections 12–14 + First Full Exam",
     grid:"grid-2",
     days:[
-      {name:"Sat",date:"Jun 14",theme:"HA/DR + Messaging — quiz databases cold first",cls:"is-weekend",blocks:[
-        {id:"d6b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD Databases topic quiz — desk, first thing",badge:"badge-quiz"},
-        {id:"d6b2",time:"5:45AM",dur:"45m",text:"Wrong answer review — cross-ref databases cheat sheet",badge:"badge-review"},
-        {id:"d6b3",time:"6:30AM",dur:"60m",text:"TD video: ALB/NLB, Route 53 routing policies, CloudFront, DR strategies",badge:"badge-video"},
-        {id:"d6b4",time:"7:30AM",dur:"60m",text:"TD video: SQS, SNS, EventBridge, Kinesis — annotate cheat sheets",badge:"badge-video"},
-        {id:"d6b5",time:"8:30AM",dur:"30m",text:"Wrong answer review from quizzes. Tag weak domains in tracker above.",badge:"badge-review"},
+      {name:"Sat",date:"Jun 14",theme:"S12–S13: RDS + DynamoDB — quiz S3 cold first",section:"TD Sections 12–13",cls:"is-weekend",blocks:[
+        {id:"d6b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD S11 S3 quiz — desk, first thing.",badge:"badge-quiz"},
+        {id:"d6b2",time:"5:45AM",dur:"45m",text:"Wrong answer review — cross-ref S3 cheat sheet.",badge:"badge-review"},
+        {id:"d6b3",time:"6:30AM",dur:"60m",text:"S12 video: RDS Overview, Read Replica, Multi-AZ, RDS Proxy, Aurora Overview — elliptical, annotate",badge:"badge-video"},
+        {id:"d6b4",time:"7:30AM",dur:"45m",text:"S13 video: DynamoDB Overview, Core Components, GSI, LSI — annotate cheat sheet",badge:"badge-video"},
+        {id:"d6b5",time:"8:15AM",dur:"20m",text:"Skim RDS + DynamoDB cheat sheet annotations.",badge:"badge-review"},
         {id:"d6b6",time:"9:00AM",dur:"rest",text:"Golf — earned. No studying after 9am Saturday.",badge:"badge-golf",isBreak:true},
       ]},
-      {name:"Sun",date:"Jun 15",theme:"Security — quiz HA/DR cold + first full exam",cls:"is-weekend",blocks:[
-        {id:"d7b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD HA/DR + messaging topic quiz — desk, first thing",badge:"badge-quiz"},
-        {id:"d7b2",time:"5:45AM",dur:"45m",text:"Wrong answer review — cross-ref cheat sheets",badge:"badge-review"},
-        {id:"d7b3",time:"6:30AM",dur:"60m",text:"TD video: KMS, Secrets Manager, WAF, GuardDuty, CloudTrail — elliptical",badge:"badge-video"},
-        {id:"d7b4",time:"7:30AM",dur:"90m",text:"TD: Full timed 65-question exam #1 — log score in tracker above",badge:"badge-exam"},
-        {id:"d7b5",time:"9:00AM",dur:"90m",text:"Deep-dive every wrong answer. Tag weak domains. Update tracker.",badge:"badge-review"},
-        {id:"d7b6",time:"10:30AM",dur:"rest",text:"Golf or rest. Done for the day.",badge:"badge-golf",isBreak:true},
+      {name:"Sun",date:"Jun 15",theme:"S14: App Integration + First Full Exam",section:"TD Section 14",cls:"is-weekend",blocks:[
+        {id:"d7b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD S12–S13 RDS + DynamoDB quiz — desk, first thing.",badge:"badge-quiz"},
+        {id:"d7b2",time:"5:45AM",dur:"30m",text:"Wrong answer review — cross-ref RDS + DynamoDB cheat sheets.",badge:"badge-review"},
+        {id:"d7b3",time:"6:15AM",dur:"45m",text:"S14 video: SNS Overview, SQS Overview, SQS FIFO, Step Functions — elliptical, annotate",badge:"badge-video"},
+        {id:"d7b4",time:"7:00AM",dur:"90m",text:"TD: Full timed 65-question exam #2 — log score in tracker above",badge:"badge-exam"},
+        {id:"d7b5",time:"8:30AM",dur:"90m",text:"Deep-dive every wrong answer. Tag weak domains in tracker. Note patterns.",badge:"badge-review"},
+        {id:"d7b6",time:"10:00AM",dur:"rest",text:"Golf or rest. Done for the day.",badge:"badge-golf",isBreak:true},
       ]},
     ]
   },
   {
-    label:"Week 2 — Mon Jun 16 through Fri Jun 20",
-    note:"Full timed exams every other day · wrong answer review is non-negotiable · Cantrill only for persistent gaps",
+    label:"Week 2 — Mon Jun 16 through Fri Jun 20 · TD Sections 15–22 + Full Exams",
+    note:"↳ Full timed exams every other day · Section 22 Versus section is exam gold — do not skip · Flashcards on elliptical final 2 days",
     grid:"grid-5",
     days:[
-      {name:"Mon",date:"Jun 16",theme:"Adv Networking — quiz security cold first",blocks:[
-        {id:"d8b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD Security topic quiz — desk, first thing",badge:"badge-quiz"},
-        {id:"d8b2",time:"5:45AM",dur:"45m",text:"Wrong answer review — cross-ref security cheat sheet",badge:"badge-review"},
-        {id:"d8b3",time:"6:30AM",dur:"60m",text:"TD video: Transit Gateway, Direct Connect, Global Accelerator — elliptical",badge:"badge-video"},
-        {id:"d8b4",time:"5:00PM",dur:"60m",text:"TD video: CloudFormation, Systems Manager, CloudWatch — annotate cheat sheet",badge:"badge-video"},
-        {id:"d8b5",time:"8:00PM",dur:"20m",text:"Skim adv networking + ops cheat sheet annotations.",badge:"badge-review"},
+      {name:"Mon",date:"Jun 16",theme:"S15–S17: Cost, Serverless, Route 53",section:"TD Sections 15–17",blocks:[
+        {id:"d8b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD S14 App Integration (SNS/SQS) quiz — desk, first thing.",badge:"badge-quiz"},
+        {id:"d8b2",time:"5:45AM",dur:"30m",text:"Wrong answer review — cross-ref SNS/SQS cheat sheet. Flag in tracker if needed.",badge:"badge-review"},
+        {id:"d8b3",time:"6:15AM",dur:"60m",text:"S15 video: AWS Budgets, Cost Explorer, Trusted Advisor — elliptical. S16: Serverless Computing Overview + Architectures",badge:"badge-video"},
+        {id:"d8b4",time:"5:00PM",dur:"60m",text:"S17 video: Route 53 Overview + ALL routing policies (Simple, Weighted, Failover, Latency, Geolocation, Geoproximity, IP-Based, Multivalue) — annotate",badge:"badge-video"},
+        {id:"d8b5",time:"6:00PM",dur:"20m",text:"Skim Route 53 cheat sheet — routing policies are a heavy exam topic.",badge:"badge-review"},
       ]},
-      {name:"Tue",date:"Jun 17",theme:"Full exam #2 — quiz adv networking cold first",blocks:[
-        {id:"d9b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD Adv Networking + Ops topic quiz — desk, first thing",badge:"badge-quiz"},
-        {id:"d9b2",time:"5:45AM",dur:"45m",text:"Wrong answer review — cross-ref cheat sheet",badge:"badge-review"},
-        {id:"d9b3",time:"6:30AM",dur:"90m",text:"TD: Full timed exam #2 — log score in tracker above",badge:"badge-exam"},
-        {id:"d9b4",time:"8:00AM",dur:"90m",text:"Deep-dive every wrong answer. Note patterns. Update domain tracker.",badge:"badge-review"},
-        {id:"d9b5",time:"5:00PM",dur:"30m",text:"TD random mode — 20 questions, untimed. Weak domains only.",badge:"badge-quiz"},
+      {name:"Tue",date:"Jun 17",theme:"S18–S19: CloudFront + EFS — quiz Route 53 cold first + Full Exam #3",section:"TD Sections 18–19",blocks:[
+        {id:"d9b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD S17 Route 53 quiz — desk, first thing.",badge:"badge-quiz"},
+        {id:"d9b2",time:"5:45AM",dur:"30m",text:"Wrong answer review — cross-ref Route 53 cheat sheet. Routing policies are always tested.",badge:"badge-review"},
+        {id:"d9b3",time:"6:15AM",dur:"45m",text:"S18 video: CloudFront Overview, CloudFront Security Features — elliptical, annotate",badge:"badge-video"},
+        {id:"d9b4",time:"7:00AM",dur:"45m",text:"S19 video: EFS Overview, FSx for Lustre, FSx for Windows, FSx OpenZFS, FSx NetApp ONTAP, DLM, AWS Backup — annotate",badge:"badge-video"},
+        {id:"d9b5",time:"5:00PM",dur:"90m",text:"TD: Full timed exam #3 — log score in tracker above",badge:"badge-exam"},
+        {id:"d9b6",time:"6:30PM",dur:"60m",text:"Wrong answer review — update domain tracker. Should see improvement from exam #2.",badge:"badge-review"},
       ]},
-      {name:"Wed",date:"Jun 18",theme:"Weak spot day + full exam #3",blocks:[
-        {id:"d10b1",time:"5:00AM",dur:"60m",text:"Rewatch TD video for your 2 lowest-scoring domains from tracker",badge:"badge-video"},
-        {id:"d10b2",time:"6:00AM",dur:"45m",text:"TD topic quiz on weakest domains only — cold recall",badge:"badge-quiz"},
-        {id:"d10b3",time:"6:45AM",dur:"45m",text:"Wrong answer review — update domain tracker",badge:"badge-review"},
-        {id:"d10b4",time:"5:00PM",dur:"90m",text:"TD: Full timed exam #3 — log score in tracker above",badge:"badge-exam"},
-        {id:"d10b5",time:"6:30PM",dur:"60m",text:"Wrong answer review from exam #3. Pattern spotting — should see improvement.",badge:"badge-review"},
+      {name:"Wed",date:"Jun 18",theme:"S20–S21: CloudWatch + Other Services — quiz CloudFront/EFS cold first",section:"TD Sections 20–21",blocks:[
+        {id:"d10b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD S18–S19 CloudFront + EFS quiz — desk, first thing.",badge:"badge-quiz"},
+        {id:"d10b2",time:"5:45AM",dur:"30m",text:"Wrong answer review — cross-ref CloudFront + EFS cheat sheets.",badge:"badge-review"},
+        {id:"d10b3",time:"6:15AM",dur:"45m",text:"S20 video: CloudWatch Overview, Metrics for EC2, Alarms, Logs/Metric Filters, EventBridge — elliptical",badge:"badge-video"},
+        {id:"d10b4",time:"5:00PM",dur:"75m",text:"S21 video: Lambda, API Gateway, Beanstalk, Config, Organizations, CloudTrail, Macie, Security Hub, Directory Service, Compute Optimizer, RAM — annotate",badge:"badge-video"},
+        {id:"d10b5",time:"6:15PM",dur:"90m",text:"TD: Full timed exam #4 — log score in tracker above",badge:"badge-exam"},
       ]},
-      {name:"Thu",date:"Jun 19",theme:"Random mode + full exam #4",blocks:[
-        {id:"d11b1",time:"5:00AM",dur:"30m",text:"Skim Well-Architected whitepaper — 6 pillars only, 30 min max",badge:"badge-review"},
-        {id:"d11b2",time:"5:30AM",dur:"45m",text:"TD random mode — 40 questions, untimed. Mixed domains.",badge:"badge-quiz"},
-        {id:"d11b3",time:"6:15AM",dur:"30m",text:"Review wrong answers from random mode",badge:"badge-review"},
-        {id:"d11b4",time:"5:00PM",dur:"90m",text:"TD: Full timed exam #4 — target 75%+. Log score.",badge:"badge-exam"},
-        {id:"d11b5",time:"6:30PM",dur:"60m",text:"Wrong answer review. If <75% rewatch flagged domain videos tonight.",badge:"badge-review"},
+      {name:"Thu",date:"Jun 19",theme:"S22: Versus Section + Full Exam #5",section:"TD Section 22 — CRITICAL",blocks:[
+        {id:"d11b1",time:"5:00AM",dur:"45m",text:"Cold recall: TD S20–S21 CloudWatch + Other Services quiz — desk, first thing.",badge:"badge-quiz"},
+        {id:"d11b2",time:"5:45AM",dur:"30m",text:"Wrong answer review. Update domain tracker.",badge:"badge-review"},
+        {id:"d11b3",time:"6:15AM",dur:"60m",text:"S22 video: ALL comparisons — S3 vs EFS vs EBS · HA vs Fault Tolerance · File vs Volume vs Tape Gateway · RTO vs RPO · SG vs NACL · Storage GW vs DataSync · SSM vs Secrets Manager · GSI vs LSI — annotate each",badge:"badge-vs"},
+        {id:"d11b4",time:"5:00PM",dur:"90m",text:"TD: Full timed exam #5 — target 75%+. Log score in tracker.",badge:"badge-exam"},
+        {id:"d11b5",time:"6:30PM",dur:"60m",text:"Wrong answer review. If still weak on a domain rewatch that TD section tonight.",badge:"badge-review"},
       ]},
-      {name:"Fri",date:"Jun 20",theme:"Light day — rest and lock in",blocks:[
-        {id:"d12b1",time:"5:00AM",dur:"30m",text:"Skim all annotated cheat sheets — your notes, not new material",badge:"badge-review"},
-        {id:"d12b2",time:"5:30AM",dur:"30m",text:"TD random mode — 20 questions only. No pressure.",badge:"badge-quiz"},
-        {id:"d12b3",time:"6:00AM",dur:"15m",text:"Confirm exam booking — early morning Sun Jun 22 slot",badge:"badge-exam"},
-        {id:"d12b4",time:"Evening",dur:"—",text:"Sleep 7+ hours tonight. No studying after 7pm.",badge:"badge-golf",isBreak:true},
+      {name:"Fri",date:"Jun 20",theme:"S23 Exam Tips + Flashcards + Light day",section:"TD Sections 23 + Bonus Flashcards",blocks:[
+        {id:"d12b1",time:"5:00AM",dur:"45m",text:"S23 video: Final Exam Tips and Remarks — elliptical. Then Bonus Flashcards Part 1 on elliptical.",badge:"badge-vs"},
+        {id:"d12b2",time:"5:45AM",dur:"30m",text:"Bonus Flashcards Part 2 — elliptical or desk. Active recall, not passive reading.",badge:"badge-vs"},
+        {id:"d12b3",time:"6:15AM",dur:"30m",text:"TD random mode — 30 questions untimed. Weakest domains only.",badge:"badge-quiz"},
+        {id:"d12b4",time:"6:45AM",dur:"15m",text:"Confirm exam booking — early morning Sun Jun 22 slot if not already booked.",badge:"badge-exam"},
+        {id:"d12b5",time:"Evening",dur:"—",text:"Sleep 7+ hours. No studying after 7pm tonight.",badge:"badge-golf",isBreak:true},
       ]},
     ]
   },
@@ -409,13 +418,13 @@ const plan=[
     label:"Exam Weekend — Sat Jun 21 + Sun Jun 22",
     grid:"grid-2",
     days:[
-      {name:"Sat",date:"Jun 21",theme:"Final mock + clear your head",cls:"is-exam",blocks:[
-        {id:"d13b1",time:"5:00AM",dur:"90m",text:"TD: Final full timed exam #5 — target 80%+. Log score.",badge:"badge-exam"},
-        {id:"d13b2",time:"6:30AM",dur:"60m",text:"Wrong answer review one last time. If 80%+ you are ready.",badge:"badge-review"},
-        {id:"d13b3",time:"7:30AM",dur:"rest",text:"Golf. Done by noon. No studying after 12pm. Let it consolidate.",badge:"badge-golf",isBreak:true},
+      {name:"Sat",date:"Jun 21",theme:"Final mock exam + S24 Practice Test",section:"TD Section 24",cls:"is-exam",blocks:[
+        {id:"d13b1",time:"5:00AM",dur:"90m",text:"TD S24: Full Practice Test (final mock) — treat as real exam conditions. Log score.",badge:"badge-exam"},
+        {id:"d13b2",time:"6:30AM",dur:"60m",text:"Wrong answer review one last time. If 80%+ you are ready. If not, rewatch 1 TD section only.",badge:"badge-review"},
+        {id:"d13b3",time:"7:30AM",dur:"rest",text:"Golf. Done by noon. No studying after 12pm. Let it consolidate overnight.",badge:"badge-golf",isBreak:true},
       ]},
-      {name:"Sun",date:"Jun 22",theme:"EXAM DAY",cls:"is-exam",blocks:[
-        {id:"d14b1",time:"5:00AM",dur:"20m",text:"Wake up normal. Skim wrong-answer notes only — 20 min max. No new material.",badge:"badge-review"},
+      {name:"Sun",date:"Jun 22",theme:"EXAM DAY",section:"AWS SAA-C03",cls:"is-exam",blocks:[
+        {id:"d14b1",time:"5:00AM",dur:"20m",text:"Wake up normal. Skim your annotated cheat sheets — 20 min max. No new material.",badge:"badge-review"},
         {id:"d14b2",time:"Morning",dur:"—",text:"Sit the AWS SAA-C03 exam — you are ready. Trust the work.",badge:"badge-exam"},
         {id:"d14b3",time:"Afternoon",dur:"—",text:"Golf to celebrate the pass.",badge:"badge-golf",isBreak:true},
       ]},
@@ -425,9 +434,8 @@ const plan=[
 
 // STORAGE
 let checked={};
-try{checked=JSON.parse(localStorage.getItem('aws_saa_v3')||'{}');}catch(e){}
-function save(){try{localStorage.setItem('aws_saa_v3',JSON.stringify(checked));}catch(e){}}
-
+try{checked=JSON.parse(localStorage.getItem('aws_saa_v4')||'{}');}catch(e){}
+function save(){try{localStorage.setItem('aws_saa_v4',JSON.stringify(checked));}catch(e){}}
 function allIds(){return plan.flatMap(w=>w.days.flatMap(d=>d.blocks.map(b=>b.id)));}
 function updateStats(){
   const all=allIds(),done=all.filter(id=>checked[id]).length,pct=all.length?Math.round(done/all.length*100):0;
@@ -437,11 +445,10 @@ function updateStats(){
   document.getElementById('prog').style.width=pct+'%';
   document.getElementById('prog-lbl').textContent=pct===100?'✓ All done — go sit that exam!':pct===0?'Click any block to mark it done':done+' of '+all.length+' blocks completed';
 }
-
 function toggle(id,dayBlocks,dpId){
-  checked[id]=!checked[id]; save();
+  checked[id]=!checked[id];save();
   document.getElementById('r-'+id).classList.toggle('done',checked[id]);
-  const dc=dayBlocks.filter(b=>checked[b.id]).length;
+  const dc=dayBlocks.filter(b=>checked[b.id]&&!b.isBreak).length;
   const dp=document.getElementById(dpId);
   if(dp)dp.textContent=dc+'/'+dayBlocks.filter(b=>!b.isBreak).length+' done';
   updateStats();
@@ -449,10 +456,10 @@ function toggle(id,dayBlocks,dpId){
 
 const root=document.getElementById('plan');
 plan.forEach(week=>{
-  const section=document.createElement('div'); section.className='week-section';
-  const hdr=document.createElement('div'); hdr.className='week-header'; hdr.textContent=week.label; section.appendChild(hdr);
-  if(week.note){const note=document.createElement('div');note.style.cssText='font-size:11px;color:var(--text3);font-family:"IBM Plex Mono",monospace;margin-bottom:0.75rem;';note.textContent='↳ '+week.note;section.appendChild(note);}
-  const grid=document.createElement('div'); grid.className='days-grid '+week.grid;
+  const section=document.createElement('div');section.className='week-section';
+  const hdr=document.createElement('div');hdr.className='week-header';hdr.textContent=week.label;section.appendChild(hdr);
+  if(week.note){const note=document.createElement('div');note.className='week-note';note.textContent=week.note;section.appendChild(note);}
+  const grid=document.createElement('div');grid.className='days-grid '+week.grid;
 
   week.days.forEach(day=>{
     const isToday=day.date===TODAY;
@@ -467,6 +474,7 @@ plan.forEach(week=>{
         <span class="day-date">${day.date}</span>
       </div>
       <div class="day-theme">${day.theme}</div>
+      <div class="day-section-tag">${day.section}</div>
       <div class="day-progress" id="${dpId}">${doneCt}/${studyBlocks.length} done</div>
     `;
     day.blocks.forEach(b=>{
@@ -474,7 +482,7 @@ plan.forEach(week=>{
       row.className='time-block'+(b.isBreak?' is-break':'')+(checked[b.id]?' done':'');
       row.id='r-'+b.id;
       row.innerHTML=`
-        ${!b.isBreak?`<div class="chk"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><polyline points="1,4 3,6.5 7,1.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`:'<div style="width:14px;flex-shrink:0"></div>'}
+        ${!b.isBreak?`<div class="chk"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><polyline points="1,4 3,6.5 7,1.5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`:'<div style="width:14px;flex-shrink:0;"></div>'}
         <div class="tb-left"><div class="tb-time">${b.time}</div><div class="tb-dur">${b.dur}</div></div>
         <div class="tb-content">${b.text}</div>
         <span class="tb-badge ${b.badge}">${b.badge.replace('badge-','')}</span>
@@ -484,7 +492,7 @@ plan.forEach(week=>{
     });
     grid.appendChild(card);
   });
-  section.appendChild(grid); root.appendChild(section);
+  section.appendChild(grid);root.appendChild(section);
 });
 updateStats();
 </script>
