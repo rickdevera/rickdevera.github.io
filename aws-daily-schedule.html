@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS SAA — Daily Schedule</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117; --surface: #1a1d27; --surface2: #22263a;
+    --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+    --text: #e8eaf0; --text2: #8b90a8; --text3: #555a72;
+    --green: #1D9E75; --green-dim: rgba(29,158,117,0.15); --green-text: #4ecda4;
+    --purple-dim: rgba(127,119,221,0.15); --purple-text: #a89ff0;
+    --amber-dim: rgba(239,159,39,0.15); --amber-text: #f5c16a;
+    --blue: #378add; --blue-dim: rgba(55,138,221,0.15); --blue-text: #7ab8f0;
+    --coral-dim: rgba(216,90,48,0.15); --coral-text: #f0997b;
+    --gray-dim: rgba(136,135,128,0.15); --gray-text: #b4b2a9;
+    --red-dim: rgba(220,60,60,0.15); --red-text: #f07a7a;
+    --radius: 10px; --radius-sm: 6px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; line-height: 1.5; }
+  .page { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  h1 { font-family: 'IBM Plex Mono', monospace; font-size: 20px; font-weight: 500; margin-bottom: 4px; }
+  .sub { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text2); margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 0.5px solid var(--border); }
+  .section-title { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.75rem; padding-bottom: 0.4rem; border-bottom: 0.5px solid var(--border); }
+  .schedule-wrap { margin-bottom: 2.5rem; }
+
+  /* TIME BLOCKS */
+  .block { display: flex; gap: 0; margin-bottom: 4px; position: relative; }
+  .block-time { width: 90px; flex-shrink: 0; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text3); padding: 10px 12px 10px 0; text-align: right; line-height: 1.3; }
+  .block-connector { width: 24px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; padding: 0; }
+  .block-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 13px; }
+  .block-line { width: 2px; flex: 1; background: var(--border); margin-top: 2px; }
+  .block:last-child .block-line { display: none; }
+  .block-card { flex: 1; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 4px; cursor: pointer; transition: all 0.15s; }
+  .block-card:hover { border-color: var(--border2); }
+  .block-card.done { background: rgba(29,158,117,0.08); border-color: rgba(29,158,117,0.25); }
+  .block-card.is-break { background: transparent; border-style: dashed; border-color: var(--border); cursor: default; }
+  .block-card.is-break:hover { border-color: var(--border); }
+  .block-head { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+  .block-label { font-size: 13px; font-weight: 500; color: var(--text); }
+  .block-card.done .block-label { color: var(--green-text); }
+  .block-card.is-break .block-label { color: var(--text3); font-weight: 400; }
+  .block-duration { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text3); margin-left: auto; }
+  .block-desc { font-size: 12px; color: var(--text2); line-height: 1.4; }
+  .block-card.done .block-desc { color: var(--green-text); opacity: 0.7; }
+  .block-card.is-break .block-desc { color: var(--text3); }
+  .block-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 6px; }
+  .tag { font-size: 10px; padding: 1px 7px; border-radius: 99px; font-family: 'IBM Plex Mono', monospace; }
+  .tag-elliptical { background: var(--coral-dim); color: var(--coral-text); }
+  .tag-quiz      { background: var(--purple-dim); color: var(--purple-text); }
+  .tag-review    { background: var(--amber-dim); color: var(--amber-text); }
+  .tag-exam      { background: var(--blue-dim); color: var(--blue-text); }
+  .tag-break     { background: var(--gray-dim); color: var(--gray-text); }
+  .tag-golf      { background: var(--green-dim); color: var(--green-text); }
+
+  /* WEEKDAY vs WEEKEND tabs */
+  .tabs { display: flex; gap: 6px; margin-bottom: 1.5rem; }
+  .tab { padding: 6px 16px; border-radius: var(--radius-sm); font-family: 'IBM Plex Mono', monospace; font-size: 12px; cursor: pointer; border: 0.5px solid var(--border); color: var(--text2); background: var(--surface); transition: all 0.15s; user-select: none; }
+  .tab.active { background: var(--blue-dim); border-color: rgba(55,138,221,0.4); color: var(--blue-text); }
+  .schedule-panel { display: none; }
+  .schedule-panel.active { display: block; }
+
+  /* PROGRESS */
+  .prog-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
+  .prog-track { flex: 1; background: var(--surface2); border-radius: 99px; height: 4px; overflow: hidden; }
+  .prog-fill { height: 4px; background: var(--green); border-radius: 99px; transition: width 0.4s; }
+  .prog-txt { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text3); white-space: nowrap; }
+
+  /* RULES */
+  .rules { margin-top: 2rem; padding: 1rem 1.25rem; background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-sm); display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem 2rem; }
+  .rule { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text3); padding: 3px 0; border-bottom: 0.5px solid var(--border); }
+  .rule:last-child { border-bottom: none; }
+  .rule span { color: var(--green-text); }
+  @media(max-width:600px) { .rules { grid-template-columns: 1fr; } .block-time { width: 70px; font-size: 10px; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>AWS SAA — Daily Schedule</h1>
+  <div class="sub">4–5 hours of structured study · breaks are consolidation, not waste · Jun 9–22 sprint</div>
+
+  <div class="prog-row">
+    <div class="prog-track"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+    <div class="prog-txt" id="prog-txt">0 / 0 blocks done today</div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showPanel('weekday')">Weekday</div>
+    <div class="tab" onclick="showPanel('weekend')">Weekend</div>
+    <div class="tab" onclick="showPanel('examweek')">Exam Week (Jun 17+)</div>
+  </div>
+
+  <!-- WEEKDAY PANEL -->
+  <div class="schedule-panel active" id="panel-weekday">
+    <div class="section-title">Weekday — Mon through Fri</div>
+    <div class="schedule-wrap" id="sched-weekday"></div>
+  </div>
+
+  <!-- WEEKEND PANEL -->
+  <div class="schedule-panel" id="panel-weekend">
+    <div class="section-title">Weekend — Sat + Sun (golf protected)</div>
+    <div class="schedule-wrap" id="sched-weekend"></div>
+  </div>
+
+  <!-- EXAM WEEK PANEL -->
+  <div class="schedule-panel" id="panel-examweek">
+    <div class="section-title">Exam Week (Jun 17–22) — full exams daily</div>
+    <div class="schedule-wrap" id="sched-examweek"></div>
+  </div>
+
+  <div class="rules">
+    <div class="rule"><span>Rule 1:</span> Watch TD video today → quiz it tomorrow cold. Never same day.</div>
+    <div class="rule"><span>Rule 2:</span> Annotate cheat sheet while watching — circle, 2 words max.</div>
+    <div class="rule"><span>Rule 3:</span> Wrong answer review is the actual studying. Never skip it.</div>
+    <div class="rule"><span>Rule 4:</span> TD exam ≥ 80% → book the real exam immediately.</div>
+    <div class="rule"><span>Rule 5:</span> Breaks are consolidation. Don't study through them.</div>
+    <div class="rule"><span>Rule 6:</span> The plan is built. Execute it. Stop optimizing it.</div>
+  </div>
+</div>
+
+<script>
+const DOT_COLORS = {
+  elliptical: '#f0997b', quiz: '#a89ff0', review: '#f5c16a',
+  exam: '#7ab8f0', break: '#555a72', golf: '#4ecda4', video: '#f0997b'
+};
+
+const schedules = {
+  weekday: [
+    { time:'5:00 AM', label:'Elliptical + TD Video', dur:'60 min', desc:'New topic TD video at 1.25x. Cheat sheet open, pen in hand. Annotate while watching. No quiz.', tags:['elliptical','video'], color:'elliptical', id:'wd1' },
+    { time:'6:00 AM', label:'Cold Recall Quiz', dur:'45 min', desc:"Yesterday's topic quiz at your desk — first thing, before coffee kicks in fully. Cold recall only. Don't review notes first.", tags:['quiz'], color:'quiz', id:'wd2' },
+    { time:'6:45 AM', label:'Wrong Answer Review', dur:'45 min', desc:'Every explanation — right and wrong answers both. Cross-reference annotated cheat sheet. Add margin notes on anything that tripped you.', tags:['review'], color:'review', id:'wd3' },
+    { time:'7:30 AM', label:'Break', dur:'30 min', desc:'Walk, coffee, breakfast. No screens. Let Block 1 consolidate.', tags:['break'], color:'break', id:'wd4', isBreak:true },
+    { time:'8:00 AM', label:'Work day begins', dur:'—', desc:'Normal work. Maybe TD mobile on lunch if you feel like it — not required.', tags:['break'], color:'break', id:'wd5', isBreak:true },
+    { time:'5:00 PM', label:'Weak Domain Deep Dive', dur:'60 min', desc:'Pull up your flagged domains from the study plan tracker. Rewatch the specific TD video section for your lowest-scoring domain. Take notes.', tags:['video','review'], color:'review', id:'wd6' },
+    { time:'6:00 PM', label:'Break', dur:'30 min', desc:'Walk, decompress from work. Non-negotiable gap between sessions.', tags:['break'], color:'break', id:'wd7', isBreak:true },
+    { time:'6:30 PM', label:'Golf or Exercise', dur:'60–90 min', desc:'Non-negotiable. Physical activity improves retention. This is part of the study plan.', tags:['golf'], color:'golf', id:'wd8', isBreak:true },
+    { time:'8:00 PM', label:'Light Review', dur:'30 min', desc:"Skim today's annotated cheat sheet section only. No new material. Then done.", tags:['review'], color:'review', id:'wd9' },
+  ],
+  weekend: [
+    { time:'5:00 AM', label:'Elliptical + TD Video', dur:'60 min', desc:'New topic TD video at 1.25x. Cheat sheet annotated while watching. Weekend sessions can cover longer sections since you have more time.', tags:['elliptical','video'], color:'elliptical', id:'we1' },
+    { time:'6:00 AM', label:'Cold Recall Quiz', dur:'45 min', desc:"Yesterday's topic quiz — cold recall at desk. No peeking at notes first.", tags:['quiz'], color:'quiz', id:'we2' },
+    { time:'6:45 AM', label:'Wrong Answer Review', dur:'60 min', desc:'Full review of every explanation. Weekend — take extra time here. Cross-ref cheat sheet, add notes. Update weak domain tracker.', tags:['review'], color:'review', id:'we3' },
+    { time:'7:45 AM', label:'Break', dur:'30 min', desc:'Coffee, breakfast. Let it settle.', tags:['break'], color:'break', id:'we4', isBreak:true },
+    { time:'8:15 AM', label:'Full Timed Exam (weekends only)', dur:'90 min', desc:'65-question timed exam. Simulate real conditions — no interruptions, no pausing. Log your score in the study plan tracker when done.', tags:['exam'], color:'exam', id:'we5' },
+    { time:'9:45 AM', label:'Exam Wrong Answer Review', dur:'60 min', desc:'Deep-dive every missed question. Tag weak domains in the tracker. Note patterns — same service tripping you up repeatedly = rewatch that video.', tags:['review'], color:'review', id:'we6' },
+    { time:'10:45 AM', label:'Done — Golf', dur:'Rest of day', desc:'Tee time. You earned it. No studying after 11am on weekends. Consolidation happens on the course.', tags:['golf'], color:'golf', id:'we7', isBreak:true },
+  ],
+  examweek: [
+    { time:'5:00 AM', label:'Elliptical — Cheat Sheet Skim', dur:'45 min', desc:'No new videos this week. Skim your annotated cheat sheets on the elliptical. Focus on flagged domains only.', tags:['elliptical','review'], color:'elliptical', id:'ew1' },
+    { time:'5:45 AM', label:'Weak Domain Topic Quiz', dur:'45 min', desc:'TD topic quiz on your 2 weakest domains — cold recall. Not a full exam yet. Targeted drilling only.', tags:['quiz'], color:'quiz', id:'ew2' },
+    { time:'6:30 AM', label:'Wrong Answer Review', dur:'30 min', desc:'Quick review of topic quiz misses. Cross-ref cheat sheet. Update domain tracker.', tags:['review'], color:'review', id:'ew3' },
+    { time:'7:00 AM', label:'Break', dur:'30 min', desc:'Breakfast. Clear your head before the big block.', tags:['break'], color:'break', id:'ew4', isBreak:true },
+    { time:'7:30 AM', label:'Full Timed Exam', dur:'90 min', desc:'65-question timed exam — real exam conditions. No pausing. Log score in tracker. Target: 75%+ by exam #3, 80%+ by exam #4.', tags:['exam'], color:'exam', id:'ew5' },
+    { time:'9:00 AM', label:'Full Exam Wrong Answer Review', dur:'90 min', desc:'This is the most important block of the day. Every wrong answer, full explanation, cheat sheet cross-reference. Tag domains. Note patterns.', tags:['review'], color:'review', id:'ew6' },
+    { time:'10:30 AM', label:'Break', dur:'30 min', desc:'Walk. Non-negotiable. Your brain needs it after 90 min of review.', tags:['break'], color:'break', id:'ew7', isBreak:true },
+    { time:'11:00 AM', label:'Random Mode + Done', dur:'30 min', desc:'TD random mode — 20 questions only. Untimed. Then done for the day. No more studying after this.', tags:['quiz'], color:'quiz', id:'ew8' },
+    { time:'11:30 AM', label:'Rest of Day — Golf', dur:'Rest of day', desc:'Physical activity, full mental rest. Exam week consolidation happens during downtime, not more studying.', tags:['golf'], color:'golf', id:'ew9', isBreak:true },
+  ]
+};
+
+let checked = {};
+try { checked = JSON.parse(localStorage.getItem('saa_daily') || '{}'); } catch(e) {}
+
+function save() { try { localStorage.setItem('saa_daily', JSON.stringify(checked)); } catch(e) {} }
+
+function updateProg(panel) {
+  const items = schedules[panel].filter(b => !b.isBreak);
+  const done = items.filter(b => checked[b.id]).length;
+  const pct = items.length ? Math.round(done / items.length * 100) : 0;
+  document.getElementById('prog').style.width = pct + '%';
+  document.getElementById('prog-txt').textContent = done + ' / ' + items.length + ' study blocks done today';
+}
+
+let currentPanel = 'weekday';
+
+function buildSchedule(key) {
+  const wrap = document.getElementById('sched-' + key);
+  wrap.innerHTML = '';
+  schedules[key].forEach(b => {
+    const block = document.createElement('div');
+    block.className = 'block';
+
+    const timeEl = document.createElement('div');
+    timeEl.className = 'block-time';
+    timeEl.textContent = b.time;
+
+    const conn = document.createElement('div');
+    conn.className = 'block-connector';
+    const dot = document.createElement('div');
+    dot.className = 'block-dot';
+    dot.style.background = DOT_COLORS[b.color] || '#555a72';
+    const line = document.createElement('div');
+    line.className = 'block-line';
+    conn.appendChild(dot);
+    conn.appendChild(line);
+
+    const card = document.createElement('div');
+    card.className = 'block-card' + (b.isBreak ? ' is-break' : '') + (checked[b.id] ? ' done' : '');
+    card.id = 'card-' + b.id;
+
+    const tagsHtml = b.tags.map(t => `<span class="tag tag-${t}">${t}</span>`).join('');
+    card.innerHTML = `
+      <div class="block-head">
+        <div class="block-label">${b.label}</div>
+        <div class="block-duration">${b.dur}</div>
+      </div>
+      <div class="block-desc">${b.desc}</div>
+      ${!b.isBreak ? `<div class="block-tags">${tagsHtml}</div>` : ''}
+    `;
+
+    if (!b.isBreak) {
+      card.addEventListener('click', () => {
+        checked[b.id] = !checked[b.id];
+        save();
+        card.classList.toggle('done', checked[b.id]);
+        updateProg(currentPanel);
+      });
+    }
+
+    block.appendChild(timeEl);
+    block.appendChild(conn);
+    block.appendChild(card);
+    wrap.appendChild(block);
+  });
+}
+
+function showPanel(key) {
+  document.querySelectorAll('.schedule-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + key).classList.add('active');
+  event.target.classList.add('active');
+  currentPanel = key;
+  updateProg(key);
+}
+
+buildSchedule('weekday');
+buildSchedule('weekend');
+buildSchedule('examweek');
+updateProg('weekday');
+</script>
+</body>
+</html>
